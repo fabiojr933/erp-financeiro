@@ -1,0 +1,14 @@
+#criar a migrate
+php spark migrate:create
+
+#executar a migrate
+php spark migrate
+
+#criar a seeder
+php spark make:seeder
+
+#executar a seeder
+php spark db:seed receita
+
+
+php spark migrate:rollback
