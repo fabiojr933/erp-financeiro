@@ -34,6 +34,14 @@
 
 <script src="<?php echo base_url('theme/dist/js/traduzir.js') ?>"></script>
 
+
+
+<!-- Select2 -->
+<script src="<?php echo base_url('theme/plugins/select2/js/select2.full.min.js') ?>"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="<?php echo base_url('theme/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') ?>"></script>
+
+
 </body>
 
 </html>

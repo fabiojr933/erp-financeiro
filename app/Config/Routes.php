@@ -36,3 +36,21 @@ $routes->post('/cartao/store', 'cartao::store');
 $routes->get('/cartao/visualizar/(:num)', 'cartao::visualizar/$1');
 $routes->get('/cartao/editar/(:num)', 'cartao::editar/$1');
 $routes->post('/cartao/excluir', 'cartao::excluir');
+
+
+//contaDre
+$routes->get('/contaDre', 'contaDre::index');
+$routes->get('/contaDre/novo', 'contaDre::novo');
+$routes->post('/contaDre/store', 'contaDre::store');
+$routes->get('/contaDre/visualizar/(:num)', 'contaDre::visualizar/$1');
+$routes->get('/contaDre/editar/(:num)', 'contaDre::editar/$1');
+$routes->post('/contaDre/excluir', 'contaDre::excluir');
+
+
+//contaFluxo
+$routes->get('/contaFluxo', 'contaFluxo::index');
+$routes->get('/contaFluxo/novo', 'contaFluxo::novo');
+$routes->post('/contaFluxo/store', 'contaFluxo::store');
+$routes->get('/contaFluxo/visualizar/(:num)', 'contaFluxo::visualizar/$1');
+$routes->get('/contaFluxo/editar/(:num)', 'contaFluxo::editar/$1');
+$routes->post('/contaFluxo/excluir', 'contaFluxo::excluir');

@@ -65,11 +65,8 @@ class Cartao extends BaseController
                     'titulo' => 'Cartão alterada com sucesso!'
                 ]
             );
-            $this->db->where('id_cartao', $id_cartao)
-                ->set($dados)
-                ->update();
+            $this->db->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->set($dados)->update();
         } else {
-
             //insert  
             $this->session->setFlashdata(
                 'alert',

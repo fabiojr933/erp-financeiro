@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
+use App\Models\contaDre;
+use App\Models\contaFluxo;
 use CodeIgniter\Controller;
 
 class Usuario extends Controller
@@ -27,12 +29,7 @@ class Usuario extends Controller
         $senha = $request->getPost('senha');
         if (is_string($senha)) {
             $senhaMD5 = md5($senha);
-            $usuario = $this->usuario_model
-                ->where('email', $request->getPost('email'))
-                ->where('senha', $senhaMD5)
-                ->first();
-
-
+            $usuario = $this->usuario_model->where('email', $request->getPost('email'))->where('senha', $senhaMD5)->first();
             if (!empty($usuario)) {
                 $this->session->setFlashdata(
                     'alert',
@@ -100,7 +97,10 @@ class Usuario extends Controller
                 $id = $this->usuario_model->insert($dados);
 
                 $receita = new ReceitaModel();
+                $contaDre = new contaDre();
                 $receita->inserirReceita($id);
+                $contaDre->inserirContaDre($id);
+
                 $this->session->setFlashdata(
                     'alert',
                     [
@@ -163,12 +163,7 @@ class Usuario extends Controller
         $session = session();
         $email = $session->get('email');
 
-        $usuario = $this->usuario_model
-            ->where('email',  $email)
-            ->first();
-
-
-
+        $usuario = $this->usuario_model->where('email',  $email)->first();
         $senha = $request->getPost('senha_atual');
 
         if (is_string($senha)) {
@@ -177,10 +172,7 @@ class Usuario extends Controller
 
             if ($senhaMD5 == $usuario['senha']) {
                 if ($senha_nova == $senha_confirma) {
-                    $r = $this->usuario_model
-                        ->where('email', $email)
-                        ->set('senha',  is_string($senha_nova) ? md5($senha_nova) : '')
-                        ->update();
+                    $this->usuario_model->where('email', $email)->set('senha',  is_string($senha_nova) ? md5($senha_nova) : '')->update();
                     $session->setFlashdata('alert', 'success_troca_senha');
                     return redirect()->to('/usuario/trocar_senha');
                 } else {

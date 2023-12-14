@@ -50,9 +50,15 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/search/enhanced.html" class="nav-link">
+              <a href="/contaDre" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>Enhanced</p>
+                <p>Conta do Dre</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/contaFluxo" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Conta do Fluxo</p>
               </a>
             </li>
           </ul>
