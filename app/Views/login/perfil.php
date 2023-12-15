@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/receita"><i class="fas fa-share"></i></a>
+                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/"><i class="fas fa-share"></i></a>
                         <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
                         <li class="breadcrumb-item"><a href="/usuario/perfil">Usuario</a></li>
                         <li class="breadcrumb-item active">Novo</li>
@@ -46,7 +46,7 @@
                         <form action="<?php base_url() ?>/usuario/atualizar_perfil" method="POST">
                             <div class="card-body">
                                 <div class="row">
-                                <input type="hidden" class="form-control" name="id_usuario" value="<?php echo $usuario['id_usuario'] ?>">
+                                    <input type="hidden" class="form-control" name="id_usuario" value="<?php echo $usuario['id_usuario'] ?>">
                                     <div class="col-lg-4">
                                         <label>Nome</label>
                                         <input type="text" class="form-control" name="nome" value="<?php echo $usuario['nome'] ?>" placeholder="Digite o seu nome" required>
@@ -101,5 +101,36 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-bullhorn"></i>
+                    Atenção
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="callout callout-danger">
+                    <h5>Importante!</h5>
+
+                    <p>FOX SISTEMAS é uma ferramenta de controle financeiro com diversas funcionalidades focadas na necessidade do empreendedor nacional e pessoal.
+                        Com ele você poderá gerir diversas áreas de sua empresa, realizar o controle de contas e, até mesmo, emitir boletos(futuramente)
+                        para seus clientes pelo próprio sistema de gestão financeiro. Teste gratuitamente e sem compromisso agora mesmo!</p>
+                </div>
+                <div class="callout callout-success">
+                    <h5>Importante!</h5>
+
+                    <p>Após a completa funcionalidade do sistema atingir 100%, será aplicada uma taxa simbólica para o seu uso, destinada a cobrir as despesas associadas ao sistema.
+                         Essa prática viabiliza a implementação de novas funcionalidades em nosso sistema.</p>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+
+
 </div>
 <!-- /.content-wrapper -->

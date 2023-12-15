@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/receita"><i class="fas fa-share"></i></a>
+                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/"><i class="fas fa-share"></i></a>
                         <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
                         <li class="breadcrumb-item"><a href="/usuario/senha">Senha</a></li>
                         <li class="breadcrumb-item active">trocar</li>

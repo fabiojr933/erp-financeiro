@@ -32,11 +32,17 @@ if ($email == null) {
   <!-- Select2 -->
   <link rel="stylesheet" href="<?php echo base_url('theme/plugins/select2/css/select2.min.css') ?>">
   <link rel="stylesheet" href="<?php echo base_url('theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') ?>">
+
+  <link rel="stylesheet" href="<?php echo base_url('theme/plugins/pace-progress/themes/black/pace-theme-flat-top.css') ?>">
+
+
   
+</head>
+
 
 </head>
 
-<body class=" hold-transition sidebar-mini text-sm">
+<body class="hold-transition sidebar-mini pace-primary text-sm">
   <div class="wrapper">
 
     <?php include_once('navbar.php') ?>

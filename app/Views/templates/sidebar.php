@@ -37,7 +37,7 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-          <li class="nav-item">
+            <li class="nav-item">
               <a href="/cartao" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
                 <p>Cartão</p>
@@ -61,9 +61,150 @@
                 <p>Conta do Fluxo</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="/cliente" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Cliente</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/fornecedor" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Fornecedor</p>
+              </a>
+            </li>
           </ul>
         </li>
 
+
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <p>
+              financeiro
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Lançamento manual</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Lançamento por OFX</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Contas a receber</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Contas a pagar</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Baixa contas a receber</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Baixa contas pagar</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Extrato bancario</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <p>
+              Dre
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>DRE analitico</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>DRE sintetico</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <p>
+              Relatorios
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>+</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>+</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <p>
+              Graficos
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>+</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>+</p>
+              </a>
+            </li>
+          </ul>
+        </li>
 
 
 
@@ -89,6 +230,7 @@
             </li>
           </ul>
         </li>
+
 
       </ul>
     </nav>

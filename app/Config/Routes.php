@@ -54,3 +54,20 @@ $routes->post('/contaFluxo/store', 'contaFluxo::store');
 $routes->get('/contaFluxo/visualizar/(:num)', 'contaFluxo::visualizar/$1');
 $routes->get('/contaFluxo/editar/(:num)', 'contaFluxo::editar/$1');
 $routes->post('/contaFluxo/excluir', 'contaFluxo::excluir');
+
+
+//cliente
+$routes->get('/cliente', 'cliente::index');
+$routes->get('/cliente/novo', 'cliente::novo');
+$routes->post('/cliente/store', 'cliente::store');
+$routes->get('/cliente/visualizar/(:num)', 'cliente::visualizar/$1');
+$routes->get('/cliente/editar/(:num)', 'cliente::editar/$1');
+$routes->post('/cliente/excluir', 'cliente::excluir');
+
+//fornecedor
+$routes->get('/fornecedor', 'fornecedor::index');
+$routes->get('/fornecedor/novo', 'fornecedor::novo');
+$routes->post('/fornecedor/store', 'fornecedor::store');
+$routes->get('/fornecedor/visualizar/(:num)', 'fornecedor::visualizar/$1');
+$routes->get('/fornecedor/editar/(:num)', 'fornecedor::editar/$1');
+$routes->post('/fornecedor/excluir', 'fornecedor::excluir');
