@@ -8,9 +8,9 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/contasReceber"><i class="fas fa-share"></i></a>
+                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/contasPagar"><i class="fas fa-share"></i></a>
                         <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="/contasReceber">Conta a receber</a></li>
+                        <li class="breadcrumb-item"><a href="/contasPagar">Conta a pagar</a></li>
                         <li class="breadcrumb-item active">visualizar</li>
                     </ol>
                 </div>
@@ -38,19 +38,19 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label for="">Descrição</label>
-                                        <input type="text" class="form-control" name="descricao" value="<?php echo $contasReceber['descricao'] ?>" disabled>
+                                        <input type="text" class="form-control" name="descricao" value="<?php echo $contasPagar['descricao'] ?>" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="">Data de Venc.</label>
-                                        <input type="date" class="form-control" name="vencimento" value="<?php echo $contasReceber['vencimento'] ?>" disabled>
+                                        <input type="date" class="form-control" name="vencimento" value="<?php echo $contasPagar['vencimento'] ?>" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group" id="valor">
                                         <label for="">Valor</label>
-                                        <input type="text" class="form-control" id="valor" name="valorr" value="<?php echo $contasReceber['valor'] ?>" disabled>
+                                        <input type="text" class="form-control" id="valor" name="valorr" value="<?php echo $contasPagar['valor'] ?>" disabled>
                                     </div>
                                 </div>
 
@@ -58,14 +58,14 @@
                                     <div class="form-group">
                                         <label>Cliente</label>
                                         <select class="form-control select2bs4" name="id_cliente" style="width: 100%;" disabled>
-                                            <option value="<?php echo $contasReceber['id_cliente'] ?>"><?php echo $contasReceber['nome'] ?></option>
+                                            <option value="<?php echo $contasPagar['id_cliente'] ?>"><?php echo $contasPagar['nome'] ?></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="">Observações</label>
-                                        <textarea class="form-control" rows="5" name="observacao"><?php echo $contasReceber['observacao'] ?> </textarea >
+                                        <textarea class="form-control" rows="5" name="observacao"><?php echo $contasPagar['observacao'] ?> </textarea >
                                     </div>
                                 </div>
                             </div>

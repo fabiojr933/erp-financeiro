@@ -2,51 +2,51 @@
 
 namespace App\Controllers;
 
-use App\Models\Cliente;
-use App\Models\contasReceber as ModelsContasReceber;
+use App\Models\fornecedor;
+use App\Models\contasPagar as ModelscontasPagar;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
-class contasReceber extends Controller
+class contasPagar extends Controller
 {
     private $session;
     private $db;
-    private $dbCliente;
+    private $dbfornecedor;
     private $dbUsuario;
 
     function __construct()
     {
         $this->session = session();
-        $this->db = new ModelsContasReceber();
-        $this->dbCliente = new Cliente();
+        $this->db = new ModelscontasPagar();
+        $this->dbfornecedor = new fornecedor();
         $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
-        $dados['contasReceber'] = $this->db->where('contasReceber.id_usuario', $this->session->get('id_usuario'))
+        $dados['contasPagar'] = $this->db->where('contasPagar.id_usuario', $this->session->get('id_usuario'))
             ->select('
-            contasReceber.id_contasreceber,
-            cliente.nome,
-            contasReceber.vencimento,
-            contasReceber.valor,
-            contasReceber.status
+            contasPagar.id_contasPagar,
+            fornecedor.nome,
+            contasPagar.vencimento,
+            contasPagar.valor,
+            contasPagar.status
         ')
-            ->join('cliente', 'contasReceber.id_cliente = cliente.id_cliente')
+            ->join('fornecedor', 'contasPagar.id_fornecedor = fornecedor.id_fornecedor')
             ->findAll();
 
         echo View('templates/header', $perfil);
-        echo View('contasReceber/index', $dados);
+        echo View('contasPagar/index', $dados);
         echo View('templates/footer');
     }
 
     public function novo()
     {
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
-        $dados['cliente'] = $this->dbCliente->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $dados['fornecedor'] = $this->dbfornecedor->where('id_usuario', $this->session->get('id_usuario'))->findAll();
         echo View('templates/header', $perfil);
-        echo View('contasReceber/formulario', $dados);
+        echo View('contasPagar/formulario', $dados);
         echo View('templates/footer');
     }
 
@@ -64,7 +64,7 @@ class contasReceber extends Controller
             'vencimento'      => $request->getPost('vencimento'),
             'valor'           => floatval($valor),
             'valor_pendente'  => floatval($valor),
-            'id_cliente'      => intval($request->getPost('id_cliente')),
+            'id_fornecedor'      => intval($request->getPost('id_fornecedor')),
             'id_usuario'      => intval($this->session->get('id_usuario')),
             'observacao'     => $request->getPost('observacao'),
         ];
@@ -78,34 +78,34 @@ class contasReceber extends Controller
         );
         // var_dump($dados); exit;
         $this->db->insert($dados);
-        return redirect()->to('contasReceber');
+        return redirect()->to('contasPagar');
     }
 
     public function visualizar($id)
     {
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
-        $dados['contasReceber'] = $this->db->where(['contasReceber.id_usuario' => $this->session->get('id_usuario'), 'id_contasreceber' => $id])
+        $dados['contasPagar'] = $this->db->where(['contasPagar.id_usuario' => $this->session->get('id_usuario'), 'id_contasPagar' => $id])
             ->select('
-            contasReceber.id_contasreceber,
-            cliente.nome,
-            cliente.id_cliente,
-            contasReceber.vencimento,
-            contasReceber.valor,
-            contasReceber.status,
-            contasReceber.observacao,
-            contasReceber.descricao,
+            contasPagar.id_contasPagar,
+            fornecedor.nome,
+            fornecedor.id_fornecedor,
+            contasPagar.vencimento,
+            contasPagar.valor,
+            contasPagar.status,
+            contasPagar.observacao,
+            contasPagar.descricao,
         ')
-            ->join('cliente', 'contasReceber.id_cliente = cliente.id_cliente')
+            ->join('fornecedor', 'contasPagar.id_fornecedor = fornecedor.id_fornecedor')
             ->first();
         echo View('templates/header', $perfil);
-        echo View('contasReceber/visualizar', $dados);
+        echo View('contasPagar/visualizar', $dados);
         echo View('templates/footer');
     }
 
     public function excluir()
     {
         $request = request();
-        $this->db->where(['id_contasreceber' => $request->getPost('id_contasreceber'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
+        $this->db->where(['id_contasPagar' => $request->getPost('id_contasPagar'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',
             [
@@ -114,6 +114,6 @@ class contasReceber extends Controller
                 'titulo' => 'Contas receber excluída com sucesso!'
             ]
         );
-        return redirect()->to('/contasReceber');
+        return redirect()->to('/contasPagar');
     }
 }

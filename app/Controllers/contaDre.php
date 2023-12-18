@@ -3,29 +3,35 @@
 namespace App\Controllers;
 
 use App\Models\contaDre as ModelsContaDre;
+use App\Models\UsuarioModel;
 use DateTime;
 
 class contaDre extends BaseController
 {
     private $session;
     private $db;
+    private $dbUsuario; 
+
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsContaDre();
+        $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $dados['contaDre'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('contaDre/index', $dados);
         echo View('templates/footer');
     }
 
     public function novo()
     {
-        echo View('templates/header');
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('contaDre/formulario');
         echo View('templates/footer');
     }
@@ -69,16 +75,18 @@ class contaDre extends BaseController
 
     public function visualizar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['contaDre'] = $this->db->where(['id_contaDre' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('contaDre/visualizar', $data);
         echo View('templates/footer');
     }
 
     public function editar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['contaDre'] = $this->db->where(['id_contaDre' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('contaDre/formulario', $data);
         echo View('templates/footer');
     }

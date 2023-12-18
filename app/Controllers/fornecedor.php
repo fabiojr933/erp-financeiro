@@ -3,28 +3,36 @@
 namespace App\Controllers;
 
 use App\Models\Fornecedor as ModelsFornecedor;
+use App\Models\UsuarioModel;
 
 class Fornecedor extends BaseController
 {
     private $session;
     private $db;
+    private $dbUsuario;
+
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsFornecedor();
+        $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
+
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $dados['fornecedor'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('fornecedor/index', $dados);
         echo View('templates/footer');
     }
 
     public function novo()
     {
-        echo View('templates/header');
+
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('fornecedor/formulario');
         echo View('templates/footer');
     }
@@ -79,24 +87,28 @@ class Fornecedor extends BaseController
                     'titulo' => 'fornecedor cadastrada com sucesso!'
                 ]
             );
-           
-            $this->db->insert($dados);            
+
+            $this->db->insert($dados);
         }
         return redirect()->to('fornecedor');
     }
 
     public function visualizar($id)
     {
+
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['fornecedor'] = $this->db->where(['id_fornecedor' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('fornecedor/visualizar', $data);
         echo View('templates/footer');
     }
 
     public function editar($id)
     {
+
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['fornecedor'] = $this->db->where(['id_fornecedor' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('fornecedor/formulario', $data);
         echo View('templates/footer');
     }

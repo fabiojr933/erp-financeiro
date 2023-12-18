@@ -3,29 +3,33 @@
 namespace App\Controllers;
 
 use App\Models\CartaoModel;
-use NumberFormatter;
+use App\Models\UsuarioModel;
 
 class Cartao extends BaseController
 {
     private $session;
     private $db;
+    private $dbUsuario;
     function __construct()
     {
         $this->session = session();
         $this->db = new CartaoModel();
+        $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
         $dados['cartao'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        echo View('templates/header');
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('cartao/index', $dados);
         echo View('templates/footer');
     }
 
     public function novo()
     {
-        echo View('templates/header');
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('cartao/formulario');
         echo View('templates/footer');
     }
@@ -50,7 +54,7 @@ class Cartao extends BaseController
             'limite'     => floatval($limite),
             'saldo'      => floatval($saldo),
             'id_usuario' => $this->session->get('id_usuario'),
-        ];       
+        ];
 
         if (intval($dados['vencimento']) > 30) {
             $this->session->setFlashdata(
@@ -91,16 +95,18 @@ class Cartao extends BaseController
 
     public function visualizar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['cartao'] = $this->db->where(['id_cartao' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('cartao/visualizar', $data);
         echo View('templates/footer');
     }
 
     public function editar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['cartao'] = $this->db->where(['id_cartao' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('cartao/formulario', $data);
         echo View('templates/footer');
     }

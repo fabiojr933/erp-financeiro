@@ -3,30 +3,35 @@
 namespace App\Controllers;
 
 use App\Models\ReceitaModel;
+use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
 class Receita extends Controller
 {
     private $session;
     private $db;
+    private $dbUsuario;
 
     function __construct()
     {
         $this->session = session();
         $this->db = new ReceitaModel();
+        $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['receita'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('Receita/index', $data);
         echo View('templates/footer');
     }
 
     public function novo()
     {
-        echo View('templates/header');
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('Receita/novo');
         echo View('templates/footer');
     }
@@ -70,8 +75,9 @@ class Receita extends Controller
 
     public function editar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['receita'] = $this->db->where(['id_receita' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('Receita/novo', $data);
         echo View('templates/footer');
     }
@@ -94,8 +100,9 @@ class Receita extends Controller
 
     public function visualizar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['receita'] = $this->db->where(['id_receita' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('Receita/visualizar', $data);
         echo View('templates/footer');
     }

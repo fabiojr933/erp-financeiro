@@ -4,28 +4,33 @@ namespace App\Controllers;
 
 use App\Models\Cliente as ModelsCliente;
 use App\Models\contaDre;
+use App\Models\UsuarioModel;
 
 class Cliente extends BaseController
 {
     private $session;
     private $db;
+    private $dbUsuario;  
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsCliente();
+        $this->dbUsuario = new UsuarioModel();
     }
 
     public function index()
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $dados['cliente'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('cliente/index', $dados);
         echo View('templates/footer');
     }
 
     public function novo()
     {
-        echo View('templates/header');
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('cliente/formulario');
         echo View('templates/footer');
     }
@@ -88,16 +93,18 @@ class Cliente extends BaseController
 
     public function visualizar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['cliente'] = $this->db->where(['id_cliente' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('cliente/visualizar', $data);
         echo View('templates/footer');
     }
 
     public function editar($id)
     {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
         $data['cliente'] = $this->db->where(['id_cliente' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('cliente/formulario', $data);
         echo View('templates/footer');
     }

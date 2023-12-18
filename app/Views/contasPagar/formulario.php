@@ -4,13 +4,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Cadastro de conta a receber</h1>
+                    <h1 class="m-0">Cadastro de conta a pagar</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/contasReceber"><i class="fas fa-share"></i></a>
+                        <a class="btn btn-primary btn-group" style="margin-right: 15px;" href="/contasPagar"><i class="fas fa-share"></i></a>
                         <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="/contasReceber">contaReceber</a></li>
+                        <li class="breadcrumb-item"><a href="/contasPagar">contaReceber</a></li>
                         <li class="breadcrumb-item active">Novo</li>
                     </ol>
                 </div>
@@ -28,7 +28,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Digite os campos abaixo</h3>
                         </div>
-                        <form action="<?php base_url() ?>/contasReceber/store" method="POST">
+                        <form action="<?php base_url() ?>/contasPagar/store" method="POST">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-3">
@@ -60,10 +60,10 @@
 
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Cliente</label>
-                                            <select class="form-control select2bs4" name="id_cliente" style="width: 100%;" required>
-                                                <?php foreach ($cliente as $data) {  ?>
-                                                    <option value="<?php echo $data['id_cliente'] ?>"><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></option>
+                                            <label>Fornecedor</label>
+                                            <select class="form-control select2bs4" name="id_fornecedor" style="width: 100%;" required>
+                                                <?php foreach ($fornecedor as $data) {  ?>
+                                                    <option value="<?php echo $data['id_fornecedor'] ?>"><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -76,7 +76,7 @@
                                     </div>
 
                                     <div class="col-lg-12" style="margin-top: 25px">
-                                        <p><b>Obs:</b> Vai gerar um documento a receber para o cliente selecionado!</p>
+                                        <p><b>Obs:</b> Vai gerar um documento a pagar para o fornecedor selecionado!</p>
                                     </div>
                                 </div>
                             </div>
