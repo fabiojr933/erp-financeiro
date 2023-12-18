@@ -34,10 +34,22 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Tipo</label>
-                                            <select class="form-control select2" id="tipo" name="tipo" style="width: 100%;">
+                                            <select class="form-control select2" id="tipo" name="tipo" style="width: 100%;" onchange="alteraTipo()">
                                                 <option value="debito" <?php echo $cartao['tipo'] == 'debito' ? 'selected' : '' ?>>Debito</option>
                                                 <option value="credito" <?php echo $cartao['tipo'] == 'credito' ? 'selected' : '' ?>>Credito</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group" id="saldo">
+                                            <label for="">Saldo</label>
+                                            <input type="text" class="form-control" name="saldo" value="<?php echo $cartao['saldo'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group" id="limite">
+                                            <label for="">Limite</label>
+                                            <input type="text" class="form-control" name="limite" value="<?php echo $cartao['limite'] ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -92,4 +104,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    function alteraTipo() {
+        tipo = document.getElementById('tipo').value;
+
+        if (tipo == 'debito') {
+            document.getElementById('limite').hidden = true;
+            document.getElementById('saldo').hidden = false;
+        } else {
+            document.getElementById('limite').hidden = false;
+            document.getElementById('saldo').hidden = true;
+        }
+    }
+
+    // Chama as funções para trabalhar nos campos
+    alteraTipo();
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Aplica a máscara ao campo de saldo
+        $('#saldo input[name="saldo"]').inputmask('currency', {
+            radixPoint: ',',
+            groupSeparator: '.',
+            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
+            prefix: '',
+            autoUnmask: true
+        });
+        $('#limite input[name="limite"]').inputmask('currency', {
+            radixPoint: ',',
+            groupSeparator: '.',
+            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
+            prefix: '',
+            autoUnmask: true
+        });
+    });
+</script>
 <!-- /.content-wrapper -->

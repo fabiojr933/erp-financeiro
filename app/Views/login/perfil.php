@@ -43,7 +43,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Digite os campos abaixo</h3>
                         </div>
-                        <form action="<?php base_url() ?>/usuario/atualizar_perfil" method="POST">
+                        <form action="<?php base_url() ?>/usuario/atualizar_perfil" method="POST" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="row">
                                     <input type="hidden" class="form-control" name="id_usuario" value="<?php echo $usuario['id_usuario'] ?>">
@@ -90,8 +90,20 @@
                                         <label>Dia do pagamento</label>
                                         <input type="text" class="form-control" value="<?php echo $usuario['dia_pagamento'] ?>" name="dia_pagamento" placeholder="Digite o dia pagamento">
                                     </div>
+                                </div><br>
+
+                                <div class="col-lg-12">
+                                    <input type="file" class="custom-file-input" id="exampleInputFile" id="foto" name="foto">
+                                    <label class="custom-file-label" for="exampleInputFile">Foto do perfil</label>
+                                </div><br>
+
+                                <div class="col-lg-12">                                   
+                                    <input type="file" class="custom-file-input" id="exampleInputFile" id="logo" name="logo">
+                                    <label class="custom-file-label" for="exampleInputFile">Logo da empresa</label>
                                 </div>
+
                             </div>
+
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar</button>
                             </div>
@@ -123,7 +135,7 @@
                     <h5>Importante!</h5>
 
                     <p>Após a completa funcionalidade do sistema atingir 100%, será aplicada uma taxa simbólica para o seu uso, destinada a cobrir as despesas associadas ao sistema.
-                         Essa prática viabiliza a implementação de novas funcionalidades em nosso sistema.</p>
+                        Essa prática viabiliza a implementação de novas funcionalidades em nosso sistema.</p>
                 </div>
             </div>
             <!-- /.card-body -->

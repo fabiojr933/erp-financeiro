@@ -71,3 +71,11 @@ $routes->post('/fornecedor/store', 'fornecedor::store');
 $routes->get('/fornecedor/visualizar/(:num)', 'fornecedor::visualizar/$1');
 $routes->get('/fornecedor/editar/(:num)', 'fornecedor::editar/$1');
 $routes->post('/fornecedor/excluir', 'fornecedor::excluir');
+
+
+//contas receber
+$routes->get('/contasReceber', 'contasReceber::index');
+$routes->get('/contasReceber/novo', 'contasReceber::novo');
+$routes->post('/contasReceber/store', 'contasReceber::store');
+$routes->get('/contasReceber/visualizar/(:num)', 'contasReceber::visualizar/$1');
+$routes->post('/contasReceber/excluir', 'contasReceber::excluir');

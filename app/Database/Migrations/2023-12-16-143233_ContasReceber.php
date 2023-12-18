@@ -4,52 +4,48 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Cartao extends Migration
+class ContasReceber extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_cartao'             => [
+            'id_contasReceber'             => [
                 'type'              => 'INT',
                 'constraint'        => 9,
                 'usigned'           => true,
                 'auto_increment'    => true
             ],
-            'nome'                  => [
+            'status'                => [
                 'type'              => 'VARCHAR',
-                'constraint'        => 128
+                'constraint'        => 20
             ],
-            'agencia'                 => [
+            'descricao'             => [
                 'type'              => 'VARCHAR',
-                'constraint'        => 15
-            ],
-            'conta'                 => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 25
+                'constraint'        => 150
             ],
             'vencimento'                 => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 15
+                'type'              => 'DATE',
+                'default'           => date('Y-m-d'),
             ],
-            'ativo'                 => [
-                'type'              => 'CHAR'
-            ],
-            'tipo'                  => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 128
-            ],
-
-            'saldo'                 => [
+            'valor'                 => [
                 'type'              => 'DECIMAL',
                 'constraint'        => '10,2',
                 'default'           => 0.00
             ],
-            'limite'                => [
+            'valor_pendente'                 => [
                 'type'              => 'DECIMAL',
                 'constraint'        => '10,2',
                 'default'           => 0.00
+            ],
+            'observacao'            => [
+                'type'              => 'VARCHAR',
+                'constraint'        => 255
             ],
             'id_usuario'            => [
+                'type'              => 'INT',
+                'constraint'        => 9,
+            ],
+            'id_cliente'            => [
                 'type'              => 'INT',
                 'constraint'        => 9,
             ],
@@ -63,13 +59,14 @@ class Cartao extends Migration
                 'type'              => 'DATETIME'
             ]
         ]);
-        $this->forge->addKey('id_cartao', true);
+        $this->forge->addKey('id_contasReceber', true);
         $this->forge->addForeignKey('id_usuario', 'usuario', 'id_usuario');
-        $this->forge->createTable('cartao');
+        $this->forge->addForeignKey('id_cliente', 'cliente', 'id_cliente');
+        $this->forge->createTable('contasReceber');
     }
 
     public function down()
     {
-        $this->forge->dropTable('cartao');
+        $this->forge->dropTable('contasReceber');
     }
 }

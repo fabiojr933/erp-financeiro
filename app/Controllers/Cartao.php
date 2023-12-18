@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\CartaoModel;
+use NumberFormatter;
 
 class Cartao extends BaseController
 {
@@ -34,6 +35,11 @@ class Cartao extends BaseController
         $request = request();
         $ativo = $request->getPost('ativo') == 'on' ? 'S' : 'N';
         $id_cartao = $request->getPost('id_cartao');
+        $saldo = $request->getPost('saldo');
+        $limite = $request->getPost('limite');
+        $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));
+        $limite = str_replace(',', '.', preg_replace('/[^\d,]/', '', $limite));
+
         $dados = [
             'nome'       => $request->getPost('nome'),
             'agencia'    => $request->getPost('agencia'),
@@ -41,8 +47,10 @@ class Cartao extends BaseController
             'vencimento' => $request->getPost('vencimento'),
             'ativo'      => $ativo,
             'tipo'       => $request->getPost('tipo'),
+            'limite'     => floatval($limite),
+            'saldo'      => floatval($saldo),
             'id_usuario' => $this->session->get('id_usuario'),
-        ];
+        ];       
 
         if (intval($dados['vencimento']) > 30) {
             $this->session->setFlashdata(

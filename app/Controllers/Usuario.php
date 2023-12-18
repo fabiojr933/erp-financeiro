@@ -117,17 +117,112 @@ class Usuario extends Controller
     public function atualizarPerfil()
     {
         $request = request();
-        $dados = [
-            'nome'               => $request->getPost('nome'),
-            'data_nascimento'    => $request->getPost('data_nascimento'),
-            'endereco'           => $request->getPost('endereco'),
-            'cep'                => $request->getPost('cep'),
-            'bairro'             => $request->getPost('bairro'),
-            'fone'               => $request->getPost('fone'),
-            'numero'             => $request->getPost('numero'),
-            'dia_pagamento'      => $request->getPost('dia_pagamento'),
 
-        ];
+        //upload foto
+        $foto = $request->getFile('foto');
+
+        // Verifica se o upload foi bem-sucedido
+        if ($foto->isValid() && !$foto->hasMoved()) {
+            // Verifica a extensão do arquivo
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
+            $fileInfo = pathinfo($foto->getName());
+            $fileExtension = strtolower($fileInfo['extension']);
+
+            if (in_array($fileExtension, $allowedExtensions)) {
+                $newName = $foto->getRandomName();
+                $foto->move('./uploads', $newName);
+            } else {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'erro',
+                        'cor'   => 'danger',
+                        'titulo' => 'Apenas arquivos com extensão JPG, JPEG ou PNG são permitidos.!'
+                    ]
+                );
+                return redirect()->to('/usuario/perfil');
+            }
+        }
+
+        $logo = $request->getFile('logo');
+
+        // Verifica se o upload foi bem-sucedido
+        if ($logo->isValid() && !$logo->hasMoved()) {
+            // Verifica a extensão do arquivo
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
+            $fileInfo = pathinfo($logo->getName());
+            $fileExtension = strtolower($fileInfo['extension']);
+
+            if (in_array($fileExtension, $allowedExtensions)) {
+                $newName = $logo->getRandomName();
+                $logo->move('./uploads', $newName);
+            } else {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'erro',
+                        'cor'   => 'danger',
+                        'titulo' => 'Apenas arquivos com extensão JPG, JPEG ou PNG são permitidos.!'
+                    ]
+                );
+                return redirect()->to('/usuario/perfil');
+            }
+        }
+        if ($foto->getName() && !$logo->getName()) {
+            $dados = array(
+                'nome'               => $request->getPost('nome'),
+                'data_nascimento'    => $request->getPost('data_nascimento'),
+                'endereco'           => $request->getPost('endereco'),
+                'cep'                => $request->getPost('cep'),
+                'bairro'             => $request->getPost('bairro'),
+                'fone'               => $request->getPost('fone'),
+                'numero'             => $request->getPost('numero'),
+                'dia_pagamento'      => $request->getPost('dia_pagamento'),
+                'foto'               => $foto->getName(),
+            );
+        }
+        if ($logo->getName() && !$foto->getName()) {
+            $dados = array(
+                'nome'               => $request->getPost('nome'),
+                'data_nascimento'    => $request->getPost('data_nascimento'),
+                'endereco'           => $request->getPost('endereco'),
+                'cep'                => $request->getPost('cep'),
+                'bairro'             => $request->getPost('bairro'),
+                'fone'               => $request->getPost('fone'),
+                'numero'             => $request->getPost('numero'),
+                'dia_pagamento'      => $request->getPost('dia_pagamento'),
+                'logo'               => $logo->getName(),
+            );
+        }
+        if (!$logo->getName() && !$foto->getName()) {
+            $dados = array(
+                'nome'               => $request->getPost('nome'),
+                'data_nascimento'    => $request->getPost('data_nascimento'),
+                'endereco'           => $request->getPost('endereco'),
+                'cep'                => $request->getPost('cep'),
+                'bairro'             => $request->getPost('bairro'),
+                'fone'               => $request->getPost('fone'),
+                'numero'             => $request->getPost('numero'),
+                'dia_pagamento'      => $request->getPost('dia_pagamento'),               
+            );
+        } else {
+            $dados = array(
+                'nome'               => $request->getPost('nome'),
+                'data_nascimento'    => $request->getPost('data_nascimento'),
+                'endereco'           => $request->getPost('endereco'),
+                'cep'                => $request->getPost('cep'),
+                'bairro'             => $request->getPost('bairro'),
+                'fone'               => $request->getPost('fone'),
+                'numero'             => $request->getPost('numero'),
+                'dia_pagamento'      => $request->getPost('dia_pagamento'),
+                'foto'               => $foto->getName(),
+                'logo'               => $logo->getName(),
+            );
+        }
+
+
+        var_dump($dados);
+
         $this->session->setFlashdata(
             'alert',
             [

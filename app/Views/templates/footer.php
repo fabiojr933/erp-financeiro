@@ -34,7 +34,7 @@
 
 <script src="<?php echo base_url('theme/dist/js/traduzir.js') ?>"></script>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
 
 <!-- Select2 -->
 <script src="<?php echo base_url('theme/plugins/select2/js/select2.full.min.js') ?>"></script>

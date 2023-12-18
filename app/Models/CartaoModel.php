@@ -16,6 +16,8 @@ class CartaoModel extends Model
         'vencimento',
         'ativo',
         'tipo',
+        'saldo',
+        'limite',
         'id_usuario',
     ];
 

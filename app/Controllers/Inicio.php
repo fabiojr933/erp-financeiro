@@ -2,15 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Models\ReceitaModel;
+use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
 class Inicio extends Controller
 {
+    private $session;
+    private $db;
+
+    function __construct()
+    {
+        $this->session = session();
+        $this->db = new UsuarioModel();
+    }
     public function index()
     {
-       echo View('templates/header');
-       echo View('inicio/index');
-       echo View('templates/footer');
-    }   
+        $data['perfil'] = $this->db->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header',$data);
+        echo View('inicio/index');
+        echo View('templates/footer');
+    }
 }

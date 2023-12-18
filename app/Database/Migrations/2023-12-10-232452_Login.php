@@ -38,11 +38,6 @@ class Login extends Migration
                 'type'              => 'DATE',
                 'default'           => date('Y-m-d'),
             ],
-            'foto'                  => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 255,
-                'null'              => true,
-            ],
             'endereço'              => [
                 'type'              => 'VARCHAR',
                 'constraint'        => 100,
@@ -74,6 +69,16 @@ class Login extends Migration
             ],
             'ativo'                 => [
                 'type'              => 'CHAR'
+            ],
+            'logo'                 => [
+                'type'              => 'VARCHAR',
+                'constraint'        => 255,
+                'null'              => true,
+            ],
+            'foto'                 => [
+                'type'              => 'VARCHAR',
+                'constraint'        => 255,
+                'null'              => true,
             ],
             'created_at'            => [
                 'type'              => 'DATETIME'

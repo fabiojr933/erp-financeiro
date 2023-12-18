@@ -24,6 +24,7 @@ class UsuarioModel extends Model
         'numero',
         'dia_pagamento',
         'ativo',
+        'logo',
     ];
 
     protected $useTimestamps = true;
