@@ -19,7 +19,7 @@
             <?php endif; ?>
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Lista de contas a pagar</h1>
+                    <h1 class="m-0">Pagamento de contas a PAGAR</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -36,7 +36,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <a class="btn btn-primary" href="/contasPagar/novo"> <i class="nav-icon fas fa-plus"></i></a>
+                            <a class="btn btn-primary" href="/contasPagar/pagamento"> <i class="nav-icon fas fa-plus"></i></a>
                         </div><br>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
@@ -47,7 +47,8 @@
                                         <th>Fornecedor</th>
                                         <th>Vencimento</th>
                                         <th>Valor</th>
-                                        <th class="no-print" style="width: 130px">Ações</th>
+                                        <th>Status</th>
+                                        <th class="no-print" style="width: 130px">Pagar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,10 +59,9 @@
                                                 <td><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></td>
                                                 <td><?php echo date('d/m/Y', strtotime($data['vencimento'])); ?></td>
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
+                                                <td><?php echo $data['status'] ?></td>
                                                 <td>
-                                                    <a href="/contasPagar/visualizar/<?php echo $data['id_contasPagar'] ?>" class="btn btn-primary btn-xs"><i class="fas fa-search"></i></a>
-                                                    <!-- <button type="button" onclick="confirmaExclusao('<php echo $data['id_receita'] ?>')" class="btn btn-danger btn-xs">Excluir</button> -->
-                                                    <button type="button" onclick="document.getElementById('id_contasPagar').value = '<?php echo  $data['id_contasPagar'] ?>'" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></button>
+                                                    <button type="button" onclick="document.getElementById('id_contasPagar').value = '<?php echo  $data['id_contasPagar'] ?>'" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-xs"><i class="fas fa-dollar-sign"></i></button>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -74,8 +74,8 @@
                             </table>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> 
+            </div>                      
         </div>
     </div>
 </div>
@@ -84,19 +84,48 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/contasPagar/excluir" method="post">
+            <form action="/contasPagar/pagamento" method="post">
                 <div class="modal-header">
-                    <h4 class="modal-title">Deseja realmente excluir ?</h4>
+                    <h4 class="modal-title">Deseja Pagar esse documento ?</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="id_contasPagar" name="id_contasPagar" value="" />
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>É uma Despesa ou uma Receita?</label>
+                            <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">
+                                <option value="despesa">Despesa</option>
+                                <option value="receita">Receita</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="id_fluxo">
+                        <div class="form-group">
+                            <label>Escolha o Fluxo Financeiro</label>
+                            <select class="form-control select2bs4" name="id_fluxo" id="id_fluxo" style="width: 100%;">
+                                <?php foreach ($fluxo as $data) {  ?>
+                                 <option value="<?php echo $data['id_contaFluxo'] ?>"><?php echo $data['nome'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="id_receita">
+                        <div class="form-group">
+                            <label>Escolha a Receita</label>
+                            <select class="form-control select2bs4" name="id_receita" id="id_receita" style="width: 100%;">
+                                <?php foreach ($receita as $re) {  ?>
+                                 <option value="<?php echo $re['id_receita'] ?>"><?php echo $re['nome'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                    <button type="submit" class="btn btn-primary">Sim</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+                    <button type="submit" class="btn btn-primary">PAGAR</button>
                 </div>
             </form>
         </div>
@@ -104,22 +133,16 @@
 </div>
 
 
-<!--
 <script>
-    function confirmaExclusao(id_receita) {
-        var conf = confirm('Deseja realmente excluir ?', 'Atenção');
-        if (conf) {
-            $.ajax({
-                url: '',
-                method: 'get',
-                success: function(response) {
-                    window.location.href = '';
-                },
-                error: function(error) {
-                    // Lógica em caso de erro
-                    console.error(error);
-                }
-            });
+    function alteraTipo() {
+        tipo = document.getElementById('ip_tipo').value;       
+        if (tipo == 'despesa') {
+            document.getElementById('id_receita').hidden = true;
+            document.getElementById('id_fluxo').hidden = false;
+        } else {
+            document.getElementById('id_receita').hidden = false;
+            document.getElementById('id_fluxo').hidden = true;
         }
     }
-</script>  -->
+    alteraTipo();
+</script>

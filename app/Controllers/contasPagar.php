@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Models\contaFluxo;
 use App\Models\fornecedor;
 use App\Models\contasPagar as ModelscontasPagar;
+use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
@@ -13,6 +15,8 @@ class contasPagar extends Controller
     private $db;
     private $dbfornecedor;
     private $dbUsuario;
+    private $dbFluxo;
+    private $dbReceita;
 
     function __construct()
     {
@@ -20,6 +24,8 @@ class contasPagar extends Controller
         $this->db = new ModelscontasPagar();
         $this->dbfornecedor = new fornecedor();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbFluxo = new contaFluxo();
+        $this->dbReceita = new ReceitaModel();
     }
 
     public function index()
@@ -29,6 +35,7 @@ class contasPagar extends Controller
             ->select('
             contasPagar.id_contasPagar,
             fornecedor.nome,
+            fornecedor.razao_social,
             contasPagar.vencimento,
             contasPagar.valor,
             contasPagar.status
@@ -88,6 +95,7 @@ class contasPagar extends Controller
             ->select('
             contasPagar.id_contasPagar,
             fornecedor.nome,
+            fornecedor.razao_social,
             fornecedor.id_fornecedor,
             contasPagar.vencimento,
             contasPagar.valor,
@@ -115,5 +123,28 @@ class contasPagar extends Controller
             ]
         );
         return redirect()->to('/contasPagar');
+    }
+
+    public function recebimento()
+    {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        $dados['contasPagar'] = $this->db->where(['contasPagar.id_usuario' => $this->session->get('id_usuario'), 'contasPagar.status' => 'Aberta'])
+            ->select('
+            contasPagar.id_contasPagar,
+            fornecedor.nome,
+            fornecedor.razao_social,
+            contasPagar.vencimento,
+            contasPagar.valor,
+            contasPagar.status
+        ')
+            ->join('fornecedor', 'contasPagar.id_fornecedor = fornecedor.id_fornecedor')
+            ->findAll();
+
+        $fluxo['fluxo'] = $this->dbFluxo->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $receita['receita'] = $this->dbReceita->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $mergedData = array_merge($dados, $fluxo, $receita);
+        echo View('templates/header', $perfil);
+        echo View('contasPagar/recebimento', $mergedData);
+        echo View('templates/footer');
     }
 }
