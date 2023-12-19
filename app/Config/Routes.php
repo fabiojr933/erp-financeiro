@@ -86,4 +86,4 @@ $routes->get('/contasPagar/recebimento', 'contasPagar::recebimento');
 $routes->get('/contasPagar/novo', 'contasPagar::novo');
 $routes->post('/contasPagar/store', 'contasPagar::store');
 $routes->get('/contasPagar/visualizar/(:num)', 'contasPagar::visualizar/$1');
-$routes->post('/contasPagar/excluir', 'contasPagar::excluir');
+$routes->post('/contasPagar/pagamento', 'contasPagar::pagamento');

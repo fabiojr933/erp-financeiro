@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasPagar;
 use App\Models\contaFluxo;
 use App\Models\fornecedor;
 use App\Models\contasPagar as ModelscontasPagar;
@@ -17,6 +18,7 @@ class contasPagar extends Controller
     private $dbUsuario;
     private $dbFluxo;
     private $dbReceita;
+    private $dbBaixaPagar;
 
     function __construct()
     {
@@ -26,12 +28,13 @@ class contasPagar extends Controller
         $this->dbUsuario = new UsuarioModel();
         $this->dbFluxo = new contaFluxo();
         $this->dbReceita = new ReceitaModel();
+        $this->dbBaixaPagar = new baixaContasPagar();
     }
 
     public function index()
     {
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
-        $dados['contasPagar'] = $this->db->where('contasPagar.id_usuario', $this->session->get('id_usuario'))
+        $dados['contasPagar'] = $this->db->where(['contasPagar.id_usuario' => $this->session->get('id_usuario'), 'contasPagar.status' => 'Aberta'])
             ->select('
             contasPagar.id_contasPagar,
             fornecedor.nome,
@@ -146,5 +149,43 @@ class contasPagar extends Controller
         echo View('templates/header', $perfil);
         echo View('contasPagar/recebimento', $mergedData);
         echo View('templates/footer');
+    }
+
+    public function pagamento()
+    {
+        $request = request();
+
+        $id_contasPagar = $request->getPost('id_contasPagar');
+        $id_usuario = $this->session->get('id_usuario');
+        $data = date('Y-m-d');
+
+        $dadosUpdate = [
+            'status'         => 'Baixado',
+            'valor_pendente' => 0.00
+        ];
+        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+
+        $dadosInsert = [
+            'origem'         =>  'Contas a Pagar',
+            'data_pagamento' => $data,
+            'valor'          => $request->getPost('valor_contasPagar'),
+            'id_despesa'     => $request->getPost('id_fluxo'),
+            'id_receita'     => $request->getPost('id_receita'),
+            'id_usuario'     => $id_usuario,
+            'id_contasPagar' => $id_contasPagar
+        ];
+        //alimentando a tabela de baixa     
+
+        $this->dbBaixaPagar->insert($dadosInsert);
+
+        $this->session->setFlashdata(
+            'alert',
+            [
+                'tipo'  => 'sucesso',
+                'cor'   => 'primary',
+                'titulo' => 'Conta PAGA com sucesso'
+            ]
+        );
+        return redirect()->to('contasPagar');
     }
 }

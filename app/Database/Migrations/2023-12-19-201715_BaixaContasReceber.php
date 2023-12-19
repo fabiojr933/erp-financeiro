@@ -4,26 +4,22 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class ContasPagar extends Migration
+class BaixaContasReceber extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_contasPagar'             => [
+            'id_baixa_conta_receber'  => [
                 'type'              => 'INT',
                 'constraint'        => 9,
                 'usigned'           => true,
                 'auto_increment'    => true
             ],
-            'status'                => [
+            'origem'                => [
                 'type'              => 'VARCHAR',
                 'constraint'        => 20
             ],
-            'descricao'             => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 150
-            ],
-            'vencimento'                 => [
+            'data_pagamento'        => [
                 'type'              => 'DATE',
                 'default'           => date('Y-m-d'),
             ],
@@ -32,20 +28,21 @@ class ContasPagar extends Migration
                 'constraint'        => '10,2',
                 'default'           => 0.00
             ],
-            'valor_pendente'                 => [
-                'type'              => 'DECIMAL',
-                'constraint'        => '10,2',
-                'default'           => 0.00
-            ],
-            'observacao'            => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 255
-            ],
             'id_usuario'            => [
                 'type'              => 'INT',
                 'constraint'        => 9,
             ],
-            'id_fornecedor'         => [
+            'id_receita'            => [
+                'type'              => 'INT',
+                'constraint'        => 9,
+                'null'              => true,
+            ],
+            'id_despesa'            => [
+                'type'              => 'INT',
+                'constraint'        => 9,
+                'null'              => true,
+            ],
+            'id_contasReceber'      => [
                 'type'              => 'INT',
                 'constraint'        => 9,
             ],
@@ -59,14 +56,16 @@ class ContasPagar extends Migration
                 'type'              => 'DATETIME'
             ]
         ]);
-        $this->forge->addKey('id_contasPagar', true);
+        $this->forge->addKey('id_baixa_conta_receber', true);
         $this->forge->addForeignKey('id_usuario', 'usuario', 'id_usuario');
-        $this->forge->addForeignKey('id_fornecedor', 'fornecedor', 'id_fornecedor');
-        $this->forge->createTable('contasPagar');
+        $this->forge->addForeignKey('id_receita', 'receita', 'id_receita');
+        $this->forge->addForeignKey('id_despesa', 'contaFluxo', 'id_contaFluxo');
+        $this->forge->addForeignKey('id_contasReceber', 'contasReceber', 'id_contasReceber');
+        $this->forge->createTable('baixa_conta_receber');
     }
 
     public function down()
     {
-        $this->forge->dropTable('contasPagar');
+        $this->forge->dropTable('baixa_conta_receber');
     }
 }

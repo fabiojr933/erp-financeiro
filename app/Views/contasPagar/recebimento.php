@@ -35,9 +35,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <a class="btn btn-primary" href="/contasPagar/pagamento"> <i class="nav-icon fas fa-plus"></i></a>
-                        </div><br>
+                      <br>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
                             <table id="tabelaDados" class="table table-hover text-nowrap table-bordered table-striped">
@@ -61,7 +59,7 @@
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
                                                 <td><?php echo $data['status'] ?></td>
                                                 <td>
-                                                    <button type="button" onclick="document.getElementById('id_contasPagar').value = '<?php echo  $data['id_contasPagar'] ?>'" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-xs"><i class="fas fa-dollar-sign"></i></button>
+                                                    <button type="button" onclick="setContasPagarValues('<?php echo $data['id_contasPagar']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-xs"><i class="fas fa-dollar-sign"></i></button>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -74,8 +72,8 @@
                             </table>
                         </div>
                     </div>
-                </div> 
-            </div>                      
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -93,6 +91,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="id_contasPagar" name="id_contasPagar" value="" />
+                    <input type="hidden" id="valor_contasPagar" name="valor_contasPagar" value="" />
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>É uma Despesa ou uma Receita?</label>
@@ -107,7 +106,7 @@
                             <label>Escolha o Fluxo Financeiro</label>
                             <select class="form-control select2bs4" name="id_fluxo" id="id_fluxo" style="width: 100%;">
                                 <?php foreach ($fluxo as $data) {  ?>
-                                 <option value="<?php echo $data['id_contaFluxo'] ?>"><?php echo $data['nome'] ?></option>
+                                    <option value="<?php echo $data['id_contaFluxo'] ?>"><?php echo $data['nome'] ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -117,7 +116,7 @@
                             <label>Escolha a Receita</label>
                             <select class="form-control select2bs4" name="id_receita" id="id_receita" style="width: 100%;">
                                 <?php foreach ($receita as $re) {  ?>
-                                 <option value="<?php echo $re['id_receita'] ?>"><?php echo $re['nome'] ?></option>
+                                    <option value="<?php echo $re['id_receita'] ?>"><?php echo $re['nome'] ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -132,10 +131,16 @@
     </div>
 </div>
 
+<script>
+    function setContasPagarValues(idContasPagar, valorContasPagar) {
+        document.getElementById('id_contasPagar').value = idContasPagar;
+        document.getElementById('valor_contasPagar').value = valorContasPagar;
+    }
+</script>
 
 <script>
     function alteraTipo() {
-        tipo = document.getElementById('ip_tipo').value;       
+        tipo = document.getElementById('ip_tipo').value;
         if (tipo == 'despesa') {
             document.getElementById('id_receita').hidden = true;
             document.getElementById('id_fluxo').hidden = false;

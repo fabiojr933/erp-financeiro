@@ -46,6 +46,7 @@
                                         <th style="width: 35px">#</th>
                                         <th>Fornecedor</th>
                                         <th>Vencimento</th>
+                                        <th>status</th>
                                         <th>Valor</th>
                                         <th class="no-print" style="width: 130px">Ações</th>
                                     </tr>
@@ -57,6 +58,7 @@
                                                 <td><?php echo $data['id_contasPagar'] ?></td>
                                                 <td><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></td>
                                                 <td><?php echo date('d/m/Y', strtotime($data['vencimento'])); ?></td>
+                                                <td><?php echo $data['status'] ?></td>
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
                                                 <td>
                                                     <a href="/contasPagar/visualizar/<?php echo $data['id_contasPagar'] ?>" class="btn btn-primary btn-xs"><i class="fas fa-search"></i></a>
