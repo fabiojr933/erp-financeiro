@@ -35,7 +35,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                      <br>
+                        <br>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
                             <table id="tabelaDados" class="table table-hover text-nowrap table-bordered table-striped">
@@ -121,6 +121,35 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Tipo pagamento</label>
+                            <select class="form-control select2bs4" name="id_pagamento" id="id_pagamento" style="width: 100%;" onchange="alteraTipo2()">                             
+                                    <option value="1">Dinheiro</option>   
+                                    <option value="2">Cartão/Deposito/Pix</option>                             
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="id_caixa">
+                        <div class="form-group">
+                            <label>Seleciona</label>
+                            <select class="form-control select2bs4" name="id_caixa" id="id_caixa" style="width: 100%;">
+                                <?php foreach ($caixa as $cai) {  ?>
+                                    <option value="<?php echo $cai['id_caixa'] ?>"><?php echo $cai['nome'] ?></option>
+                                <?php } ?>                               
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="id_cartao">
+                        <div class="form-group">
+                            <label>Seleciona</label>
+                            <select class="form-control select2bs4" name="id_cartao" id="id_cartao" style="width: 100%;">                               
+                                <?php foreach ($cartao as $car) {  ?>
+                                    <option value="<?php echo $car['id_cartao'] ?>"><?php echo $car['nome'] ?> - <?php echo $car['tipo'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
@@ -138,6 +167,8 @@
     }
 </script>
 
+
+
 <script>
     function alteraTipo() {
         tipo = document.getElementById('ip_tipo').value;
@@ -150,4 +181,18 @@
         }
     }
     alteraTipo();
+</script>
+
+<script>
+    function alteraTipo2() {
+        tipo = document.getElementById('id_pagamento').value;
+        if (tipo == '1') {
+            document.getElementById('id_cartao').hidden = true;
+            document.getElementById('id_caixa').hidden = false;
+        } else {
+            document.getElementById('id_cartao').hidden = false;
+            document.getElementById('id_caixa').hidden = true;
+        }
+    }
+    alteraTipo2();
 </script>

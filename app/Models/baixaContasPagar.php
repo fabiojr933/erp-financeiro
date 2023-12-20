@@ -16,7 +16,10 @@ class baixaContasPagar extends Model
         'id_usuario',
         'id_receita',        
         'id_despesa',
-        'id_contasPagar',  
+        'id_contasPagar', 
+        'id_cartao',
+        'id_caixa',
+        'tipo_pagamento' 
     ];
 
     protected $useTimestamps = true;

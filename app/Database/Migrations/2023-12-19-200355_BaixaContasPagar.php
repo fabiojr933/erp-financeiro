@@ -18,6 +18,10 @@ class BaixaContasPagar extends Migration
             'origem'                => [
                 'type'              => 'VARCHAR',
                 'constraint'        => 20
+            ],            
+            'tipo_pagamento'        => [
+                'type'              => 'VARCHAR',
+                'constraint'        => 20
             ],
             'data_pagamento'        => [
                 'type'              => 'DATE',
@@ -42,6 +46,16 @@ class BaixaContasPagar extends Migration
                 'constraint'        => 9,
                 'null'              => true,
             ],
+            'id_caixa'            => [
+                'type'              => 'INT',
+                'constraint'        => 9,
+                'null'              => true,
+            ],
+            'id_cartao'            => [
+                'type'              => 'INT',
+                'constraint'        => 9,
+                'null'              => true,
+            ],
             'id_contasPagar'        => [
                 'type'              => 'INT',
                 'constraint'        => 9,
@@ -59,6 +73,8 @@ class BaixaContasPagar extends Migration
         $this->forge->addKey('id_baixa_conta_pagar', true);
         $this->forge->addForeignKey('id_usuario', 'usuario', 'id_usuario');
         $this->forge->addForeignKey('id_receita', 'receita', 'id_receita');
+        $this->forge->addForeignKey('id_caixa', 'caixa', 'id_caixa');
+        $this->forge->addForeignKey('id_cartao', 'cartao', 'id_cartao');
         $this->forge->addForeignKey('id_despesa', 'contaFluxo', 'id_contaFluxo');
         $this->forge->addForeignKey('id_contasPagar', 'contasPagar', 'id_contasPagar');
         $this->forge->createTable('baixa_conta_pagar');

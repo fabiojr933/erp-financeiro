@@ -29,6 +29,16 @@ $routes->get('/usuario/trocar_senha', 'usuario::trocaSenha');
 $routes->get('/usuario/perfil', 'usuario::perfil');
 $routes->post('/usuario/atualizar_perfil', 'usuario::atualizarPerfil');
 
+
+//caixa
+$routes->get('/caixa', 'caixa::index');
+$routes->get('/caixa/novo', 'caixa::novo');
+$routes->post('/caixa/store', 'caixa::store');
+$routes->get('/caixa/visualizar/(:num)', 'caixa::visualizar/$1');
+$routes->get('/caixa/editar/(:num)', 'caixa::editar/$1');
+$routes->post('/caixa/excluir', 'caixa::excluir');
+
+
 //cartao
 $routes->get('/cartao', 'cartao::index');
 $routes->get('/cartao/novo', 'cartao::novo');

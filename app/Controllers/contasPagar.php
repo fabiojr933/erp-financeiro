@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\baixaContasPagar;
+use App\Models\Caixa;
+use App\Models\CartaoModel;
 use App\Models\contaFluxo;
 use App\Models\fornecedor;
 use App\Models\contasPagar as ModelscontasPagar;
@@ -19,6 +21,8 @@ class contasPagar extends Controller
     private $dbFluxo;
     private $dbReceita;
     private $dbBaixaPagar;
+    private $dbCartao;
+    private $dbCaixa;
 
     function __construct()
     {
@@ -29,6 +33,8 @@ class contasPagar extends Controller
         $this->dbFluxo = new contaFluxo();
         $this->dbReceita = new ReceitaModel();
         $this->dbBaixaPagar = new baixaContasPagar();
+        $this->dbCartao = new CartaoModel();
+        $this->dbCaixa = new Caixa();
     }
 
     public function index()
@@ -145,7 +151,9 @@ class contasPagar extends Controller
 
         $fluxo['fluxo'] = $this->dbFluxo->where('id_usuario', $this->session->get('id_usuario'))->findAll();
         $receita['receita'] = $this->dbReceita->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        $mergedData = array_merge($dados, $fluxo, $receita);
+        $cartao['cartao'] = $this->dbCartao->where(['id_usuario' => $this->session->get('id_usuario'), 'tipo' => 'debito'])->findAll();
+        $caixa['caixa'] = $this->dbCaixa->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $mergedData = array_merge($dados, $fluxo, $receita, $cartao, $caixa);
         echo View('templates/header', $perfil);
         echo View('contasPagar/recebimento', $mergedData);
         echo View('templates/footer');
@@ -153,11 +161,54 @@ class contasPagar extends Controller
 
     public function pagamento()
     {
-        $request = request();
 
+        /*
+        $cartao['cartao'] = $this->dbCartao->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $caixa['caixa'] = $this->dbCaixa->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        */
+        $request = request();
+        $id_pagamento = $request->getPost('id_pagamento');
+        $id_caixa = $request->getPost('id_caixa');
+        $id_cartao = $request->getPost('id_cartao');
         $id_contasPagar = $request->getPost('id_contasPagar');
         $id_usuario = $this->session->get('id_usuario');
+        $valor = $request->getPost('valor_contasPagar');
         $data = date('Y-m-d');
+
+        // verifica se for dinheiro // verifica se ha saldo
+        if ($id_caixa) {
+            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
+
+            if (floatval($valor) < floatval($caixaSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no caixa!'
+                    ]
+                );
+                return redirect()->to('contasPagar/recebimento');
+            }else{
+                echo 'eteet'; exit;
+            }
+        }
+
+        // verifica se for cartao // verifica se ha saldo
+        if ($id_cartao) {
+            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
+            if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no cartão!'
+                    ]
+                );
+                return redirect()->to('contasPagar/recebimento');
+            }
+        }
 
         $dadosUpdate = [
             'status'         => 'Baixado',
@@ -167,12 +218,15 @@ class contasPagar extends Controller
 
         $dadosInsert = [
             'origem'         =>  'Contas a Pagar',
+            'id_pagamento'   => $id_pagamento,
             'data_pagamento' => $data,
-            'valor'          => $request->getPost('valor_contasPagar'),
+            'valor'          => $valor,
             'id_despesa'     => $request->getPost('id_fluxo'),
             'id_receita'     => $request->getPost('id_receita'),
             'id_usuario'     => $id_usuario,
-            'id_contasPagar' => $id_contasPagar
+            'id_contasPagar' => $id_contasPagar,
+            'id_caixa'       => $id_caixa,
+            'id_cartao'      => $id_cartao
         ];
         //alimentando a tabela de baixa     
 
@@ -186,6 +240,6 @@ class contasPagar extends Controller
                 'titulo' => 'Conta PAGA com sucesso'
             ]
         );
-        return redirect()->to('contasPagar');
+        return redirect()->to('contasPagar/recebimento');
     }
 }

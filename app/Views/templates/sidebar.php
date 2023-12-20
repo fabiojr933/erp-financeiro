@@ -37,6 +37,12 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
+          <li class="nav-item">
+              <a href="/caixa" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Caixa</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="/cartao" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
