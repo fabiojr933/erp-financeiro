@@ -88,7 +88,8 @@ $routes->get('/contasReceber', 'contasReceber::index');
 $routes->get('/contasReceber/novo', 'contasReceber::novo');
 $routes->post('/contasReceber/store', 'contasReceber::store');
 $routes->get('/contasReceber/visualizar/(:num)', 'contasReceber::visualizar/$1');
-$routes->post('/contasReceber/excluir', 'contasReceber::excluir');
+$routes->post('/contasReceber/pagamento', 'contasReceber::pagamento');
+$routes->get('/contasReceber/recebimento', 'contasReceber::recebimento');
 
 //contas pagar
 $routes->get('/contasPagar', 'contasPagar::index');

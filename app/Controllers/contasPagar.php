@@ -161,11 +161,6 @@ class contasPagar extends Controller
 
     public function pagamento()
     {
-
-        /*
-        $cartao['cartao'] = $this->dbCartao->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        $caixa['caixa'] = $this->dbCaixa->where('id_usuario', $this->session->get('id_usuario'))->findAll();
-        */
         $request = request();
         $id_pagamento = $request->getPost('id_pagamento');
         $id_caixa = $request->getPost('id_caixa');
@@ -179,7 +174,7 @@ class contasPagar extends Controller
         if ($id_caixa) {
             $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
 
-            if (floatval($valor) < floatval($caixaSaldo['saldo'])) {
+            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
                 $this->session->setFlashdata(
                     'alert',
                     [
@@ -189,8 +184,9 @@ class contasPagar extends Controller
                     ]
                 );
                 return redirect()->to('contasPagar/recebimento');
-            }else{
-                echo 'eteet'; exit;
+            } else {
+                $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($valor);
+                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
             }
         }
 
@@ -207,6 +203,9 @@ class contasPagar extends Controller
                     ]
                 );
                 return redirect()->to('contasPagar/recebimento');
+            } else {
+                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($valor);
+                $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
             }
         }
 

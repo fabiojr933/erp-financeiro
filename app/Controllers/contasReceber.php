@@ -2,8 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasReceber;
+use App\Models\Caixa;
+use App\Models\CartaoModel;
 use App\Models\Cliente;
+use App\Models\contaFluxo;
 use App\Models\contasReceber as ModelsContasReceber;
+use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
@@ -13,6 +18,11 @@ class contasReceber extends Controller
     private $db;
     private $dbCliente;
     private $dbUsuario;
+    private $dbCartao;
+    private $dbCaixa;
+    private $dbBaixaReceber;
+    private $dbFluxo;
+    private $dbReceita;
 
     function __construct()
     {
@@ -20,12 +30,17 @@ class contasReceber extends Controller
         $this->db = new ModelsContasReceber();
         $this->dbCliente = new Cliente();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbCartao = new CartaoModel();
+        $this->dbCaixa = new Caixa();
+        $this->dbBaixaReceber = new baixaContasReceber();
+        $this->dbFluxo = new contaFluxo();
+        $this->dbReceita = new ReceitaModel();
     }
 
     public function index()
     {
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
-        $dados['contasReceber'] = $this->db->where('contasReceber.id_usuario', $this->session->get('id_usuario'))
+        $dados['contasReceber'] = $this->db->where(['contasReceber.id_usuario' => $this->session->get('id_usuario'), 'contasReceber.status' => 'Aberta'])
             ->select('
             contasReceber.id_contasreceber,
             cliente.nome,
@@ -115,5 +130,118 @@ class contasReceber extends Controller
             ]
         );
         return redirect()->to('/contasReceber');
+    }
+
+
+    public function recebimento()
+    {
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        $dados['contasReceber'] = $this->db->where(['contasReceber.id_usuario' => $this->session->get('id_usuario'), 'contasReceber.status' => 'Aberta'])
+            ->select('
+            contasReceber.id_contasReceber,
+            cliente.nome,
+            cliente.razao_social,
+            contasReceber.vencimento,
+            contasReceber.valor,
+            contasReceber.status
+        ')
+            ->join('cliente', 'contasReceber.id_cliente = cliente.id_cliente')
+            ->findAll();
+
+        $fluxo['fluxo'] = $this->dbFluxo->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $receita['receita'] = $this->dbReceita->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $cartao['cartao'] = $this->dbCartao->where(['id_usuario' => $this->session->get('id_usuario'), 'tipo' => 'debito'])->findAll();
+        $caixa['caixa'] = $this->dbCaixa->where('id_usuario', $this->session->get('id_usuario'))->findAll();
+        $mergedData = array_merge($dados, $fluxo, $receita, $cartao, $caixa);
+        echo View('templates/header', $perfil);
+        echo View('contasReceber/recebimento', $mergedData);
+        echo View('templates/footer');
+    }
+
+    public function pagamento()
+    {
+        $request = request();
+        $id_pagamento = $request->getPost('id_pagamento');
+        $id_caixa = $request->getPost('id_caixa');
+        $id_cartao = $request->getPost('id_cartao');
+        $id_contasReceber = $request->getPost('id_contasReceber');
+        $id_usuario = $this->session->get('id_usuario');
+        $valor = $request->getPost('valor_contasReceber');
+        $data = date('Y-m-d');
+
+        
+
+        var_dump(' cartao ' . $id_cartao . ' caixa ' . $id_caixa); exit;
+
+        // verifica se for dinheiro // verifica se ha saldo
+        if ($id_caixa) {
+            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
+
+            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no caixa!'
+                    ]
+                );
+                return redirect()->to('contasReceber/recebimento');
+            } else {
+                $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($valor);
+                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
+            }
+        }
+
+        // verifica se for cartao // verifica se ha saldo
+        if ($id_cartao) {
+            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
+            if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no cartão!'
+                    ]
+                );
+                return redirect()->to('contasReceber/recebimento');
+            } else {
+                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($valor);
+                $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
+            }
+        }
+
+        $dadosUpdate = [
+            'status'         => 'Baixado',
+            'valor_pendente' => 0.00
+        ];
+        $this->db->where(['id_contasReceber' => $id_contasReceber, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+
+        $dadosInsert = [
+            'origem'           =>  'Contas a Pagar',
+            'id_pagamento'     => $id_pagamento,
+            'data_pagamento'   => $data,
+            'valor'            => $valor,
+            'id_despesa'       => $request->getPost('id_fluxo'),
+            'id_receita'       => $request->getPost('id_receita'),
+            'id_usuario'       => $id_usuario,
+            'id_contasReceber' => $id_contasReceber,
+            'id_caixa'         => $id_caixa,
+            'id_cartao'        => $id_cartao
+        ];
+        //alimentando a tabela de baixa    
+      
+        $this->dbBaixaReceber->insert($dadosInsert);
+
+        $this->session->setFlashdata(
+            'alert',
+            [
+                'tipo'  => 'sucesso',
+                'cor'   => 'primary',
+                'titulo' => 'Conta PAGA com sucesso'
+            ]
+        );
+        return redirect()->to('contasReceber/recebimento');
     }
 }
