@@ -170,6 +170,13 @@ class contasPagar extends Controller
         $valor = $request->getPost('valor_contasPagar');
         $data = date('Y-m-d');
 
+
+        if ($id_pagamento == '1') {
+            $id_cartao = null;
+        } else {
+            $id_caixa = null;
+        }
+
         // verifica se for dinheiro // verifica se ha saldo
         if ($id_caixa) {
             $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();

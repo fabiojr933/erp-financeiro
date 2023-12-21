@@ -41,7 +41,7 @@ class Caixa extends Controller
         $request = request();
         $id_caixa = $request->getPost('id_caixa');
         $saldo = $request->getPost('saldo');
-        $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));       
+       // $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));       
 
         $dados = [
             'nome'       => $request->getPost('nome'),          

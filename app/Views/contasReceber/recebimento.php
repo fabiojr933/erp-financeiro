@@ -104,7 +104,7 @@
                     <div class="col-md-12" id="id_fluxo">
                         <div class="form-group">
                             <label>Escolha o Fluxo Financeiro</label>
-                            <select class="form-control select2bs4" name="id_fluxo" id="id_fluxo" style="width: 100%;" >                               
+                            <select class="form-control select2bs4" name="id_fluxo" id="id_fluxo" style="width: 100%;">
                                 <?php foreach ($fluxo as $data) {  ?>
                                     <option value="<?php echo $data['id_contaFluxo'] ?>"><?php echo $data['nome'] ?></option>
                                 <?php } ?>
@@ -114,8 +114,8 @@
                     <div class="col-md-12" id="id_receita">
                         <div class="form-group">
                             <label>Escolha a Receita</label>
-                            <select class="form-control select2bs4" name="id_receita" id="id_receita" style="width: 100%;" >
-                              
+                            <select class="form-control select2bs4" name="id_receita" id="id_receita" style="width: 100%;">
+
                                 <?php foreach ($receita as $re) {  ?>
                                     <option value="<?php echo $re['id_receita'] ?>"><?php echo $re['nome'] ?></option>
                                 <?php } ?>
@@ -125,7 +125,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Tipo pagamento</label>
-                            <select class="form-control select2bs4" name="id_pagamento" id="id_pagamento" style="width: 100%;" onchange="alteraTipo2()" >
+                            <select class="form-control select2bs4" name="id_pagamento" id="id_pagamento" style="width: 100%;" onchange="alteraTipo2()">
                                 <option value="1">Dinheiro</option>
                                 <option value="2">Cartão/Deposito/Pix</option>
                             </select>
@@ -134,7 +134,7 @@
                     <div class="col-md-12" id="id_caixa">
                         <div class="form-group">
                             <label>Seleciona</label>
-                            <select class="form-control select2bs4" name="id_caixa" id="id_caixa" style="width: 100%;" >                                
+                            <select class="form-control select2bs4" name="id_caixa" id="id_caixa" style="width: 100%;">
                                 <?php foreach ($caixa as $cai) {  ?>
                                     <option value="<?php echo $cai['id_caixa'] ?>"><?php echo $cai['nome'] ?></option>
                                 <?php } ?>
@@ -144,7 +144,7 @@
                     <div class="col-md-12" id="id_cartao">
                         <div class="form-group">
                             <label>Seleciona</label>
-                            <select class="form-control select2bs4" name="id_cartao" id="id_cartao" style="width: 100%;">                               
+                            <select class="form-control select2bs4" name="id_cartao" id="id_cartao" style="width: 100%;">
                                 <?php foreach ($cartao as $car) {  ?>
                                     <option value="<?php echo $car['id_cartao'] ?>"><?php echo $car['nome'] ?> - <?php echo $car['tipo'] ?></option>
                                 <?php } ?>
@@ -175,18 +175,12 @@
         tipo = document.getElementById('ip_tipo').value;
         if (tipo == 'despesa') {
             document.getElementById('id_receita').hidden = true;
-            document.getElementById('id_receita').disabled = true;
-            document.getElementById('id_receita').value = '';
-
             document.getElementById('id_fluxo').hidden = false;
             //disabled
         } else {
             document.getElementById('id_receita').hidden = false;
-
             document.getElementById('id_fluxo').hidden = true;
-            document.getElementById('id_fluxo').disabled = true;
-            document.getElementById('id_fluxo').value = '';
-            
+
         }
     }
     alteraTipo();
@@ -197,17 +191,10 @@
         tipo = document.getElementById('id_pagamento').value;
         if (tipo == '1') {
             document.getElementById('id_cartao').hidden = true;
-            document.getElementById('id_cartao').disabled = true;
-            document.getElementById('id_cartao').value = '';
-      
-
             document.getElementById('id_caixa').hidden = false;
         } else {
             document.getElementById('id_cartao').hidden = false;
-
             document.getElementById('id_caixa').hidden = true;
-            document.getElementById('id_caixa').disabled = true;
-            document.getElementById('id_caixa').value = '';
         }
     }
     alteraTipo2();

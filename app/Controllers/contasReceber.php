@@ -169,9 +169,13 @@ class contasReceber extends Controller
         $valor = $request->getPost('valor_contasReceber');
         $data = date('Y-m-d');
 
-        
 
-        var_dump(' cartao ' . $id_cartao . ' caixa ' . $id_caixa); exit;
+        if ($id_pagamento == '1') {
+            $id_cartao = null;
+        } else {
+            $id_caixa = null;
+        }
+       
 
         // verifica se for dinheiro // verifica se ha saldo
         if ($id_caixa) {
@@ -231,7 +235,7 @@ class contasReceber extends Controller
             'id_cartao'        => $id_cartao
         ];
         //alimentando a tabela de baixa    
-      
+
         $this->dbBaixaReceber->insert($dadosInsert);
 
         $this->session->setFlashdata(

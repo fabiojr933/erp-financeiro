@@ -40,7 +40,7 @@
                                     <div class="col-lg-3">
                                         <div class="form-group" id="saldo">
                                             <label for="">Saldo</label>
-                                            <input type="text" class="form-control" name="saldo" value="<?php echo $caixa['saldo'] ?>" required>
+                                            <input type="text" class="form-control" name="saldo" value="<?php echo $caixa['saldo'] ?>" onkeypress="return allowOnlyNumbers(event)" required>
                                         </div>
                                     </div>
                                 </div>
@@ -57,22 +57,24 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Aplica a máscara ao campo de saldo
-        $('#saldo input[name="saldo"]').inputmask('currency', {
-            radixPoint: ',',
-            groupSeparator: '.',
-            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
-            prefix: '',
-            autoUnmask: true
-        });
-        $('#limite input[name="limite"]').inputmask('currency', {
-            radixPoint: ',',
-            groupSeparator: '.',
-            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
-            prefix: '',
-            autoUnmask: true
-        });
-    });
+    function allowOnlyNumbers(event) {
+        // Obtem o código da tecla pressionada
+        var keyCode = event.which || event.keyCode;
+
+        // Permite apenas números (0-9) e algumas teclas especiais
+        if ((keyCode >= 48 && keyCode <= 57) ||    // Números
+            (keyCode >= 96 && keyCode <= 105) ||   // Números no teclado numérico
+            keyCode == 8 ||  // Backspace
+            keyCode == 9 ||  // Tab
+            keyCode == 37 || // Seta para a esquerda
+            keyCode == 39 || // Seta para a direita
+            keyCode == 46) { // Delete
+            return true;
+        } else {
+            // Impede a entrada de outras teclas
+            event.preventDefault();
+            return false;
+        }
+    }
 </script>
-<!-- /.content-wrapper -->
+

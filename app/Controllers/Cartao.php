@@ -41,8 +41,8 @@ class Cartao extends BaseController
         $id_cartao = $request->getPost('id_cartao');
         $saldo = $request->getPost('saldo');
         $limite = $request->getPost('limite');
-        $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));
-        $limite = str_replace(',', '.', preg_replace('/[^\d,]/', '', $limite));
+     //   $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));
+     //   $limite = str_replace(',', '.', preg_replace('/[^\d,]/', '', $limite));
 
         $dados = [
             'nome'       => $request->getPost('nome'),
