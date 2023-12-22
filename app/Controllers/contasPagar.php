@@ -162,13 +162,14 @@ class contasPagar extends Controller
     public function pagamento()
     {
         $request = request();
-        $id_pagamento = $request->getPost('id_pagamento');
-        $id_caixa = $request->getPost('id_caixa');
-        $id_cartao = $request->getPost('id_cartao');
-        $id_contasPagar = $request->getPost('id_contasPagar');
-        $id_usuario = $this->session->get('id_usuario');
-        $valor = $request->getPost('valor_contasPagar');
-        $data = date('Y-m-d');
+        $id_pagamento       = $request->getPost('id_pagamento');
+        $id_caixa           = $request->getPost('id_caixa');
+        $id_cartao          = $request->getPost('id_cartao');
+        $id_contasPagar     = $request->getPost('id_contasPagar');
+        $id_usuario         = $this->session->get('id_usuario');
+        $valor              = $request->getPost('valor_contasPagar');
+        $data               = date('Y-m-d');
+        $ip_tipo            = $request->getPost('ip_tipo');
 
 
         if ($id_pagamento == '1') {
@@ -227,13 +228,13 @@ class contasPagar extends Controller
             'id_pagamento'   => $id_pagamento,
             'data_pagamento' => $data,
             'valor'          => $valor,
-            'id_despesa'     => $request->getPost('id_fluxo'),
-            'id_receita'     => $request->getPost('id_receita'),
+            'id_despesa'     => $request->getPost('id_fluxo'),       
             'id_usuario'     => $id_usuario,
             'id_contasPagar' => $id_contasPagar,
             'id_caixa'       => $id_caixa,
             'id_cartao'      => $id_cartao
-        ];
+        ];        
+        
         //alimentando a tabela de baixa     
 
         $this->dbBaixaPagar->insert($dadosInsert);

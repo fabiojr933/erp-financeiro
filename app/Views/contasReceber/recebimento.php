@@ -95,22 +95,11 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>É uma Despesa ou uma Receita?</label>
-                            <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">
-                                <option value="despesa">Despesa</option>
-                                <option value="receita">Receita</option>
+                            <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">                            
+                                <option selected value="receita">Receita</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-12" id="id_fluxo">
-                        <div class="form-group">
-                            <label>Escolha o Fluxo Financeiro</label>
-                            <select class="form-control select2bs4" name="id_fluxo" id="id_fluxo" style="width: 100%;">
-                                <?php foreach ($fluxo as $data) {  ?>
-                                    <option value="<?php echo $data['id_contaFluxo'] ?>"><?php echo $data['nome'] ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
+                    </div>                   
                     <div class="col-md-12" id="id_receita">
                         <div class="form-group">
                             <label>Escolha a Receita</label>
@@ -166,24 +155,6 @@
         document.getElementById('id_contasReceber').value = idcontasReceber;
         document.getElementById('valor_contasReceber').value = valorcontasReceber;
     }
-</script>
-
-
-
-<script>
-    function alteraTipo() {
-        tipo = document.getElementById('ip_tipo').value;
-        if (tipo == 'despesa') {
-            document.getElementById('id_receita').hidden = true;
-            document.getElementById('id_fluxo').hidden = false;
-            //disabled
-        } else {
-            document.getElementById('id_receita').hidden = false;
-            document.getElementById('id_fluxo').hidden = true;
-
-        }
-    }
-    alteraTipo();
 </script>
 
 <script>

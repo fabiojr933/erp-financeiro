@@ -161,6 +161,7 @@ class contasReceber extends Controller
     public function pagamento()
     {
         $request = request();
+
         $id_pagamento = $request->getPost('id_pagamento');
         $id_caixa = $request->getPost('id_caixa');
         $id_cartao = $request->getPost('id_cartao');
@@ -175,45 +176,19 @@ class contasReceber extends Controller
         } else {
             $id_caixa = null;
         }
-       
+
 
         // verifica se for dinheiro // verifica se ha saldo
         if ($id_caixa) {
             $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
-
-            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
-                $this->session->setFlashdata(
-                    'alert',
-                    [
-                        'tipo'  => 'sucesso',
-                        'cor'   => 'danger',
-                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no caixa!'
-                    ]
-                );
-                return redirect()->to('contasReceber/recebimento');
-            } else {
-                $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($valor);
-                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
-            }
+            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($valor);
+            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
         }
-
         // verifica se for cartao // verifica se ha saldo
         if ($id_cartao) {
             $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
-                $this->session->setFlashdata(
-                    'alert',
-                    [
-                        'tipo'  => 'sucesso',
-                        'cor'   => 'danger',
-                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no cartão!'
-                    ]
-                );
-                return redirect()->to('contasReceber/recebimento');
-            } else {
-                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($valor);
-                $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-            }
+            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($valor);
+            $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
         }
 
         $dadosUpdate = [
@@ -227,15 +202,14 @@ class contasReceber extends Controller
             'id_pagamento'     => $id_pagamento,
             'data_pagamento'   => $data,
             'valor'            => $valor,
-            'id_despesa'       => $request->getPost('id_fluxo'),
             'id_receita'       => $request->getPost('id_receita'),
             'id_usuario'       => $id_usuario,
             'id_contasReceber' => $id_contasReceber,
             'id_caixa'         => $id_caixa,
             'id_cartao'        => $id_cartao
         ];
-        //alimentando a tabela de baixa    
 
+        //alimentando a tabela de baixa 
         $this->dbBaixaReceber->insert($dadosInsert);
 
         $this->session->setFlashdata(

@@ -94,10 +94,9 @@
                     <input type="hidden" id="valor_contasPagar" name="valor_contasPagar" value="" />
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>É uma Despesa ou uma Receita?</label>
+                            <label>Tipo</label>
                             <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">
-                                <option value="despesa">Despesa</option>
-                                <option value="receita">Receita</option>
+                                <option selected value="despesa">Despesa</option>                             
                             </select>
                         </div>
                     </div>
@@ -110,17 +109,7 @@
                                 <?php } ?>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-12" id="id_receita">
-                        <div class="form-group">
-                            <label>Escolha a Receita</label>
-                            <select class="form-control select2bs4" name="id_receita" id="id_receita" style="width: 100%;">
-                                <?php foreach ($receita as $re) {  ?>
-                                    <option value="<?php echo $re['id_receita'] ?>"><?php echo $re['nome'] ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
+                    </div>                  
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Tipo pagamento</label>
@@ -165,22 +154,6 @@
         document.getElementById('id_contasPagar').value = idContasPagar;
         document.getElementById('valor_contasPagar').value = valorContasPagar;
     }
-</script>
-
-
-
-<script>
-    function alteraTipo() {
-        tipo = document.getElementById('ip_tipo').value;
-        if (tipo == 'despesa') {
-            document.getElementById('id_receita').hidden = true;
-            document.getElementById('id_fluxo').hidden = false;
-        } else {
-            document.getElementById('id_receita').hidden = false;
-            document.getElementById('id_fluxo').hidden = true;
-        }
-    }
-    alteraTipo();
 </script>
 
 <script>

@@ -37,11 +37,6 @@ class BaixaContasReceber extends Migration
                 'constraint'        => 9,
                 'null'              => true,
             ],
-            'id_despesa'            => [
-                'type'              => 'INT',
-                'constraint'        => 9,
-                'null'              => true,
-            ],
             'id_contasReceber'      => [
                 'type'              => 'INT',
                 'constraint'        => 9,
@@ -71,7 +66,6 @@ class BaixaContasReceber extends Migration
         $this->forge->addForeignKey('id_caixa', 'caixa', 'id_caixa');
         $this->forge->addForeignKey('id_cartao', 'cartao', 'id_cartao');
         $this->forge->addForeignKey('id_receita', 'receita', 'id_receita');
-        $this->forge->addForeignKey('id_despesa', 'contaFluxo', 'id_contaFluxo');
         $this->forge->addForeignKey('id_contasReceber', 'contasReceber', 'id_contasReceber');
         $this->forge->createTable('baixa_conta_receber');
     }
