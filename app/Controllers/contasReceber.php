@@ -51,8 +51,20 @@ class contasReceber extends Controller
             ->join('cliente', 'contasReceber.id_cliente = cliente.id_cliente')
             ->findAll();
 
+        $dados2['contasReceberPagos'] = $this->db->where(['contasReceber.id_usuario' => $this->session->get('id_usuario'), 'contasReceber.status' => 'Baixado'])
+            ->select('
+            contasReceber.id_contasreceber,
+            cliente.nome,
+            contasReceber.vencimento,
+            contasReceber.valor,
+            contasReceber.status
+        ')
+            ->join('cliente', 'contasReceber.id_cliente = cliente.id_cliente')
+            ->findAll();
+
+        $mergedData = array_merge($dados, $dados2);
         echo View('templates/header', $perfil);
-        echo View('contasReceber/index', $dados);
+        echo View('contasReceber/index', $mergedData);
         echo View('templates/footer');
     }
 
@@ -91,7 +103,7 @@ class contasReceber extends Controller
                 'titulo' => 'Contas a receber cadastrada com sucesso!'
             ]
         );
-        // var_dump($dados); exit;
+
         $this->db->insert($dados);
         return redirect()->to('contasReceber');
     }
@@ -181,14 +193,38 @@ class contasReceber extends Controller
         // verifica se for dinheiro // verifica se ha saldo
         if ($id_caixa) {
             $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($valor);
-            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
+            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no caixa!'
+                    ]
+                );
+                return redirect()->to('contasReceber/recebimento');
+            } else {
+                $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($valor);
+                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
+            }
         }
         // verifica se for cartao // verifica se ha saldo
         if ($id_cartao) {
             $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($valor);
-            $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
+            if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
+                $this->session->setFlashdata(
+                    'alert',
+                    [
+                        'tipo'  => 'sucesso',
+                        'cor'   => 'danger',
+                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no cartão!'
+                    ]
+                );
+                return redirect()->to('contasPagar/recebimento');
+            } else {
+                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($valor);
+                $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
+            }
         }
 
         $dadosUpdate = [
@@ -221,5 +257,47 @@ class contasReceber extends Controller
             ]
         );
         return redirect()->to('contasReceber/recebimento');
+    }
+
+
+    public function cancelamento()
+    {
+        $request = request();
+
+        $id_contasreceber = $request->getPost('id_contasreceber2');
+        $id_usuario   = $this->session->get('id_usuario');
+
+        $dadosCancelamento = $this->dbBaixaReceber->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->first();
+
+
+
+        if ($dadosCancelamento['id_caixa']) {
+            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $dadosCancelamento['id_caixa'], 'id_usuario' => $id_usuario])->first();
+            $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($dadosCancelamento['valor']);
+
+            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $dadosCancelamento['id_caixa']])->set('saldo', $dataSaldo)->update();
+        }
+        if ($dadosCancelamento['id_cartao']) {
+            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->first();
+            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($dadosCancelamento['valor']);
+            $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
+        }
+
+        $dadosUpdate = [
+            'status'         => 'Aberta',
+            'valor_pendente' => $dadosCancelamento['valor']
+        ];
+        $this->db->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+        $this->dbBaixaReceber->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->delete();
+
+        $this->session->setFlashdata(
+            'alert',
+            [
+                'tipo'  => 'sucesso',
+                'cor'   => 'primary',
+                'titulo' => 'Conta a receber foi reaberto'
+            ]
+        );
+        return redirect()->to('contasReceber');
     }
 }

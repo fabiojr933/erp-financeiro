@@ -93,7 +93,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/lancamento" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
                 <p>Lançamento manual</p>
               </a>

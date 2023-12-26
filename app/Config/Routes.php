@@ -90,6 +90,7 @@ $routes->post('/contasReceber/store', 'contasReceber::store');
 $routes->get('/contasReceber/visualizar/(:num)', 'contasReceber::visualizar/$1');
 $routes->post('/contasReceber/pagamento', 'contasReceber::pagamento');
 $routes->get('/contasReceber/recebimento', 'contasReceber::recebimento');
+$routes->post('/contasReceber/cancelamento', 'contasReceber::cancelamento');
 
 //contas pagar
 $routes->get('/contasPagar', 'contasPagar::index');
@@ -98,3 +99,11 @@ $routes->get('/contasPagar/novo', 'contasPagar::novo');
 $routes->post('/contasPagar/store', 'contasPagar::store');
 $routes->get('/contasPagar/visualizar/(:num)', 'contasPagar::visualizar/$1');
 $routes->post('/contasPagar/pagamento', 'contasPagar::pagamento');
+$routes->post('/contasPagar/cancelamento', 'contasPagar::cancelamento');
+
+
+//lancamento
+$routes->get('/lancamento', 'lancamento::index');
+$routes->get('/lancamento/novo', 'lancamento::novo');
+$routes->post('/lancamento/store', 'lancamento::store');
+$routes->post('/lancamento/excluir', 'lancamento::excluir');

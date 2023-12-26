@@ -48,7 +48,7 @@
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label for="">Data de Venc.</label>
-                                            <input type="date" class="form-control" name="vencimento" value="2023-12-16" required>
+                                            <input type="date" class="form-control" name="vencimento" required>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">

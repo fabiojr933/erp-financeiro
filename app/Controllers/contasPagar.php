@@ -52,8 +52,23 @@ class contasPagar extends Controller
             ->join('fornecedor', 'contasPagar.id_fornecedor = fornecedor.id_fornecedor')
             ->findAll();
 
+
+        $dados2['contasPagarPagos'] = $this->db->where(['contasPagar.id_usuario' => $this->session->get('id_usuario'), 'contasPagar.status' => 'Baixado'])
+            ->select('
+            contasPagar.id_contasPagar,
+            fornecedor.nome,
+            fornecedor.razao_social,
+            contasPagar.vencimento,
+            contasPagar.valor,
+            contasPagar.status
+        ')
+            ->join('fornecedor', 'contasPagar.id_fornecedor = fornecedor.id_fornecedor')
+            ->findAll();
+
+        $mergedData = array_merge($dados, $dados2);
+
         echo View('templates/header', $perfil);
-        echo View('contasPagar/index', $dados);
+        echo View('contasPagar/index', $mergedData);
         echo View('templates/footer');
     }
 
@@ -89,7 +104,7 @@ class contasPagar extends Controller
             [
                 'tipo'  => 'sucesso',
                 'cor'   => 'primary',
-                'titulo' => 'Contas a receber cadastrada com sucesso!'
+                'titulo' => 'Contas a pagar cadastrada com sucesso!'
             ]
         );
         // var_dump($dados); exit;
@@ -128,7 +143,7 @@ class contasPagar extends Controller
             [
                 'tipo'  => 'sucesso',
                 'cor'   => 'primary',
-                'titulo' => 'Contas receber excluída com sucesso!'
+                'titulo' => 'Contas pagar excluída com sucesso!'
             ]
         );
         return redirect()->to('/contasPagar');
@@ -228,13 +243,13 @@ class contasPagar extends Controller
             'id_pagamento'   => $id_pagamento,
             'data_pagamento' => $data,
             'valor'          => $valor,
-            'id_despesa'     => $request->getPost('id_fluxo'),       
+            'id_despesa'     => $request->getPost('id_fluxo'),
             'id_usuario'     => $id_usuario,
             'id_contasPagar' => $id_contasPagar,
             'id_caixa'       => $id_caixa,
             'id_cartao'      => $id_cartao
-        ];        
-        
+        ];
+
         //alimentando a tabela de baixa     
 
         $this->dbBaixaPagar->insert($dadosInsert);
@@ -248,5 +263,49 @@ class contasPagar extends Controller
             ]
         );
         return redirect()->to('contasPagar/recebimento');
+    }
+
+    public function cancelamento()
+    {
+
+       
+        $request = request();
+
+        $id_contasPagar = $request->getPost('id_contasPagar2');
+        $id_usuario   = $this->session->get('id_usuario');
+     
+        $dadosCancelamento = $this->dbBaixaPagar->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->first();
+
+    
+
+
+        if ($dadosCancelamento['id_caixa']) {
+            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $dadosCancelamento['id_caixa'], 'id_usuario' => $id_usuario])->first();
+            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($dadosCancelamento['valor']);
+
+            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $dadosCancelamento['id_caixa']])->set('saldo', $dataSaldo)->update();
+        }
+        if ($dadosCancelamento['id_cartao']) {
+            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->first();
+            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($dadosCancelamento['valor']);
+            $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
+        }
+
+        $dadosUpdate = [
+            'status'         => 'Aberta',
+            'valor_pendente' => $dadosCancelamento['valor']
+        ];
+        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+        $this->dbBaixaPagar->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->delete();
+
+        $this->session->setFlashdata(
+            'alert',
+            [
+                'tipo'  => 'sucesso',
+                'cor'   => 'primary',
+                'titulo' => 'Conta a pagar foi reaberto'
+            ]
+        );
+        return redirect()->to('contasPagar');
     }
 }
