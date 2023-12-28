@@ -46,6 +46,7 @@ $routes->post('/cartao/store', 'cartao::store');
 $routes->get('/cartao/visualizar/(:num)', 'cartao::visualizar/$1');
 $routes->get('/cartao/editar/(:num)', 'cartao::editar/$1');
 $routes->post('/cartao/excluir', 'cartao::excluir');
+$routes->post('/cartao/pagamentoCredito', 'cartao::pagamentoCredito');
 
 
 //contaDre
@@ -107,3 +108,11 @@ $routes->get('/lancamento', 'lancamento::index');
 $routes->get('/lancamento/novo', 'lancamento::novo');
 $routes->post('/lancamento/store', 'lancamento::store');
 $routes->post('/lancamento/excluir', 'lancamento::excluir');
+
+//dre
+$routes->get('/dre/sintetico', 'dre::sintetico');
+$routes->get('/dre/analitico', 'dre::analitico');
+
+
+//Relatorios
+$routes->get('/relatorios/teste', 'relatorios::teste');

@@ -221,8 +221,6 @@ class Usuario extends Controller
         }
 
 
-        var_dump($dados);
-
         $this->session->setFlashdata(
             'alert',
             [

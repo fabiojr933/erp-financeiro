@@ -147,15 +147,15 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/dre/sintetico" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>DRE analitico</p>
+                <p>DRE sintetico</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/dre/analitico" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>DRE sintetico</p>
+                <p>DRE analitico</p>
               </a>
             </li>
           </ul>
