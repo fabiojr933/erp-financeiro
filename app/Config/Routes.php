@@ -115,4 +115,10 @@ $routes->get('/dre/analitico', 'dre::analitico');
 
 
 //Relatorios
-$routes->get('/relatorios/teste', 'relatorios::teste');
+$routes->get('/relatorio/receita', 'relatorio::receita');
+$routes->get('/relatorio/despesa', 'relatorio::despesa');
+
+
+//Relatorios
+$routes->get('/grafico/receita', 'grafico::receita');
+$routes->get('/grafico/despesa', 'grafico::despesa');

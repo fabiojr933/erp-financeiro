@@ -35,11 +35,12 @@ if ($email == null) {
 
   <link rel="stylesheet" href="<?php echo base_url('theme/plugins/pace-progress/themes/black/pace-theme-flat-top.css') ?>">
 
-
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
+
+
 </head>
-
-
 </head>
 
 <body class="hold-transition sidebar-mini pace-primary text-sm">

@@ -173,15 +173,15 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/relatorio/despesa" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>+</p>
+                <p>Despesas</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/relatorio/receita" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>+</p>
+                <p>Receitas</p>
               </a>
             </li>
           </ul>
@@ -198,15 +198,15 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/grafico/despesa" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>+</p>
+                <p>Despesas</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/grafico/receita" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
-                <p>+</p>
+                <p>Receitas</p>
               </a>
             </li>
           </ul>
