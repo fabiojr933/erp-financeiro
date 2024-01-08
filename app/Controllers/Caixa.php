@@ -2,7 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasPagar;
+use App\Models\baixaContasReceber;
 use App\Models\caixa as ModelsCaixa;
+use App\Models\contasPagar;
+use App\Models\contasReceber;
+use App\Models\lancamento;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
@@ -11,12 +16,18 @@ class Caixa extends Controller
     private $session;
     private $db;
     private $dbUsuario;
+    private $dbLancamento;
+    private $dbReceber;
+    private $dbPagar;
 
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsCaixa();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbLancamento = new lancamento();
+        $this->dbReceber = new baixaContasReceber();
+        $this->dbPagar = new baixaContasPagar();
     }
 
     public function index()
@@ -41,14 +52,14 @@ class Caixa extends Controller
         $request = request();
         $id_caixa = $request->getPost('id_caixa');
         $saldo = $request->getPost('saldo');
-       // $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));       
+        // $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));       
 
         $dados = [
-            'nome'       => $request->getPost('nome'),          
+            'nome'       => $request->getPost('nome'),
             'saldo'      => floatval($saldo),
             'id_usuario' => $this->session->get('id_usuario'),
         ];
-       
+
         //Update
         if (isset($id_caixa)) {
             $this->session->setFlashdata(
@@ -96,15 +107,32 @@ class Caixa extends Controller
     public function excluir()
     {
         $request = request();
+        $lanc = $this->dbLancamento->where(['id_caixa' => $request->getPost('id_caixa'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');
+        $pagar = $this->dbPagar->where(['id_caixa' => $request->getPost('id_caixa'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_pagar');
+        $receber = $this->dbReceber->where(['id_caixa' => $request->getPost('id_caixa'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_receber');
+       
+        if ($lanc > 0 || $pagar > 0 || $receber > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a esse caixa!'
+                ]
+            );
+            return redirect()->to('/caixa');
+        }
         $this->db->where(['id_caixa' => $request->getPost('id_caixa'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',
             [
                 'tipo'  => 'sucesso',
                 'cor'   => 'primary',
-                'titulo' => 'Receita excluída com sucesso!'
+                'titulo' => 'Caixa excluída com sucesso!'
             ]
         );
         return redirect()->to('/caixa');
     }
 }
+
+//selectCount

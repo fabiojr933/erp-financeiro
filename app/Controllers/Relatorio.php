@@ -125,7 +125,7 @@ class Relatorio extends Controller
             from lancamento lan
             RIGHT join contafluxo f on lan.id_fluxo = f.id_contaFluxo          
            -- where lan.id_fluxo is NOT null
-            and lan.data_pagamento BETWEEN '2022.01.01' and '$data_final'
+            and lan.data_pagamento BETWEEN '$data_inicio' and '$data_final'
             group by 1,2)
             select 
             dados.id_contaFluxo,

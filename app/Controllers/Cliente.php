@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\Cliente as ModelsCliente;
 use App\Models\contaDre;
+use App\Models\contasReceber;
+use App\Models\lancamento;
 use App\Models\UsuarioModel;
 
 class Cliente extends BaseController
@@ -11,11 +13,18 @@ class Cliente extends BaseController
     private $session;
     private $db;
     private $dbUsuario;  
+    private $dbLancamento;
+    private $dbReceber;
+ 
+
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsCliente();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbLancamento = new lancamento();
+        $this->dbReceber = new contasReceber();
+   
     }
 
     public function index()
@@ -102,7 +111,8 @@ class Cliente extends BaseController
 
     public function editar($id)
     {
-        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();      
+
         $data['cliente'] = $this->db->where(['id_cliente' => $id, 'id_usuario' => $this->session->get('id_usuario')])->first();
         echo View('templates/header', $perfil);
         echo View('cliente/formulario', $data);
@@ -112,6 +122,22 @@ class Cliente extends BaseController
     public function excluir()
     {
         $request = request();
+        $lanc = $this->dbLancamento->where(['id_cliente' => $request->getPost('id_cliente'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');
+       
+        $receber = $this->dbReceber->where(['id_cliente' => $request->getPost('id_cliente'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_receber');
+       
+        if ($lanc > 0 || $receber > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a esse CLIENTE!'
+                ]
+            );
+            return redirect()->to('/cliente');
+        }
+
         $this->db->where(['id_cliente' => $request->getPost('id_cliente'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',

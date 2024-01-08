@@ -34,7 +34,7 @@
         <div class="container-fluid">
             <div class="card no-print">
                 <div class="card-body">
-                    <form action="/grafico" method="get">
+                    <form action="/grafico/despesa" method="get">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="form-group">

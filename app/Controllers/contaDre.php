@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\contaDre as ModelsContaDre;
+use App\Models\contaFluxo;
 use App\Models\UsuarioModel;
 use DateTime;
 
@@ -11,12 +12,14 @@ class contaDre extends BaseController
     private $session;
     private $db;
     private $dbUsuario; 
+    private $dbContaFluxo;
 
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsContaDre();
-        $this->dbUsuario = new UsuarioModel();
+        $this->dbUsuario = new UsuarioModel();   
+        $this->dbContaFluxo = new contaFluxo();    
     }
 
     public function index()
@@ -94,6 +97,19 @@ class contaDre extends BaseController
     public function excluir()
     {
         $request = request();
+        $contaFluxo = $this->dbContaFluxo->where(['id_contaDre' => $request->getPost('id_contaDre'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('contafluxo');
+       
+        if ($contaFluxo > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe conta fluxo vinculado a essa conta Dre!'
+                ]
+            );
+            return redirect()->to('/contaDre');
+        }
         $this->db->where(['id_contaDre' => $request->getPost('id_contaDre'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',

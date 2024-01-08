@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\contasPagar;
 use App\Models\Fornecedor as ModelsFornecedor;
+use App\Models\lancamento;
 use App\Models\UsuarioModel;
 
 class Fornecedor extends BaseController
@@ -10,12 +12,16 @@ class Fornecedor extends BaseController
     private $session;
     private $db;
     private $dbUsuario;
+    private $dbLancamento;
+    private $dbPagar;
 
     function __construct()
     {
         $this->session = session();
         $this->db = new ModelsFornecedor();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbLancamento = new lancamento();
+        $this->dbPagar = new contasPagar();
     }
 
     public function index()
@@ -116,6 +122,22 @@ class Fornecedor extends BaseController
     public function excluir()
     {
         $request = request();
+
+        $lanc = $this->dbLancamento->where(['id_fornecedor' => $request->getPost('id_fornecedor'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');
+        $receber = $this->dbPagar->where(['id_fornecedor' => $request->getPost('id_fornecedor'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_pagar');
+       
+        if ($lanc > 0 || $receber > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a esse FORNECEDOR!'
+                ]
+            );
+            return redirect()->to('/fornecedor');
+        }
+
         $this->db->where(['id_fornecedor' => $request->getPost('id_fornecedor'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',

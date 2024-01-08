@@ -2,8 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasPagar;
+use App\Models\baixaContasReceber;
 use App\Models\Caixa;
 use App\Models\CartaoModel;
+use App\Models\lancamento;
 use App\Models\lancamentoCredito;
 use App\Models\UsuarioModel;
 
@@ -14,6 +17,9 @@ class Cartao extends BaseController
     private $dbUsuario;
     private $dbCartaoCredito;
     private $dbcaixa;
+    private $dbLancamento;
+    private $dbReceber;
+    private $dbPagar;
 
     function __construct()
     {
@@ -22,6 +28,9 @@ class Cartao extends BaseController
         $this->dbUsuario = new UsuarioModel();
         $this->dbCartaoCredito = new lancamentoCredito();
         $this->dbcaixa = new Caixa();
+        $this->dbLancamento = new lancamento();
+        $this->dbReceber = new baixaContasReceber();
+        $this->dbPagar = new baixaContasPagar();
     }
 
     public function index()
@@ -136,6 +145,22 @@ class Cartao extends BaseController
     public function excluir()
     {
         $request = request();
+        $lanc = $this->dbLancamento->where(['id_cartao' => $request->getPost('id_cartao'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');
+        $pagar = $this->dbPagar->where(['id_cartao' => $request->getPost('id_cartao'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_pagar');
+        $receber = $this->dbReceber->where(['id_cartao' => $request->getPost('id_cartao'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_receber');
+
+        if ($lanc > 0 || $pagar > 0 || $receber > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a esse cartão!'
+                ]
+            );
+            return redirect()->to('/cartao');
+        }
+
         $this->db->where(['id_cartao' => $request->getPost('id_cartao'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',

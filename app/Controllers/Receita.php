@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasReceber;
+use App\Models\lancamento;
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
@@ -11,12 +13,16 @@ class Receita extends Controller
     private $session;
     private $db;
     private $dbUsuario;
+    private $dbLancamento;
+    private $dbReceber;
 
     function __construct()
     {
         $this->session = session();
         $this->db = new ReceitaModel();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbLancamento = new lancamento();
+        $this->dbReceber = new baixaContasReceber();
     }
 
     public function index()
@@ -86,6 +92,21 @@ class Receita extends Controller
     {
         $request = request();
         $id = $request->getPost('id_receita');
+
+        $lanc = $this->dbLancamento->where(['id_caixa' => $id, 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');       
+        $receber = $this->dbReceber->where(['id_caixa' => $id, 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_receber');
+       
+        if ($lanc > 0 || $receber > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a essa receita!'
+                ]
+            );
+            return redirect()->to('/receita');
+        }
         $this->db->where(['id_receita' => $id, 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',

@@ -2,8 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\baixaContasPagar;
+use App\Models\baixaContasReceber;
 use App\Models\contaDre;
 use App\Models\contaFluxo as ModelsContaFluxo;
+use App\Models\lancamento;
 use App\Models\UsuarioModel;
 
 class contaFluxo extends BaseController
@@ -11,7 +14,10 @@ class contaFluxo extends BaseController
     private $session;
     private $db;
     private $db2;
-    private $dbUsuario;  
+    private $dbUsuario;
+    private $dbLancamento;
+    private $dbReceber;
+    private $dbPagar;
 
     function __construct()
     {
@@ -19,6 +25,9 @@ class contaFluxo extends BaseController
         $this->db = new ModelsContaFluxo();
         $this->db2 = new contaDre();
         $this->dbUsuario = new UsuarioModel();
+        $this->dbLancamento = new lancamento();
+        $this->dbReceber = new baixaContasReceber();
+        $this->dbPagar = new baixaContasPagar();
     }
 
     public function index()
@@ -101,13 +110,29 @@ class contaFluxo extends BaseController
     public function excluir()
     {
         $request = request();
+
+        $lanc = $this->dbLancamento->where(['id_fluxo' => $request->getPost('id_contaFluxo'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('lancamento');
+        $pagar = $this->dbPagar->where(['id_despesa' => $request->getPost('id_contaFluxo'), 'id_usuario' => $this->session->get('id_usuario')])->countAllResults('baixa_conta_pagar');
+
+        if ($lanc > 0 || $pagar > 0) {
+            $this->session->setFlashdata(
+                'alert',
+                [
+                    'tipo'  => 'sucesso',
+                    'cor'   => 'danger',
+                    'titulo' => 'Não é possivel excluir, ja existe lançamento vinculado a esse fluxo financeiro!'
+                ]
+            );
+            return redirect()->to('/contaFluxo');
+        }
+
         $this->db->where(['id_contaFluxo' => $request->getPost('id_contaFluxo'), 'id_usuario' => $this->session->get('id_usuario')])->delete();
         $this->session->setFlashdata(
             'alert',
             [
                 'tipo'  => 'sucesso',
                 'cor'   => 'primary',
-                'titulo' => 'Conta Dre excluída com sucesso!'
+                'titulo' => 'Conta do Fluxo excluída com sucesso!'
             ]
         );
         return redirect()->to('/contaFluxo');
