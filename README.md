@@ -29,26 +29,8 @@ execute no navegador
 
 
 
-
-<img src=https://github.com/fabiojr933/erp-financeiro/assets/41793614/653848c2-a22d-4184-9b29-c7fa9580aff9 width=40% height=30%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/9e5eb0b0-3e6a-4b8c-bc7a-56bc99e8d764" width=30% height=20%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/1a07c0f6-e9ff-42bb-9e62-c4ae2bbf2910" width=30% height=20%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/9adab126-ce10-4427-bc19-a850fa910ab1" width=30% height=20%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/a7c87614-50bc-4508-b735-890fe39e6532" width=30% height=20%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/335ae302-c59f-49ed-bf81-249957f25748" width=30% height=20%>
- <p  
- </p>
-<img src="https://github.com/fabiojr933/Control-APP/assets/41793614/d6ab70a5-2669-441c-a71e-ca0d3efe4090" width=30% height=20%>
-
-
-
+![5](https://github.com/fabiojr933/erp-financeiro/assets/41793614/596e860d-bb7a-447f-b3bc-5d5808cf54fd)
+![4](https://github.com/fabiojr933/erp-financeiro/assets/41793614/2ff796b5-b236-42df-9cde-1fbf3a74d770)
+![3](https://github.com/fabiojr933/erp-financeiro/assets/41793614/774ff529-9a46-4137-9145-1dba8d4e9569)
+![2](https://github.com/fabiojr933/erp-financeiro/assets/41793614/163404b5-e170-4efa-a461-d18b2848ddba)
+![1](https://github.com/fabiojr933/erp-financeiro/assets/41793614/bc7030e4-e350-4f02-97f2-47e28693e33b)
