@@ -92,10 +92,10 @@
                                         <div class="form-group">
                                             <label>É Cliente ou Fornecedor</label>
                                             <select class="form-control select2bs4" id="tipo_cli_for" name="tipo_cli_for" style="width: 100%;" onchange="alteraTipo3()" required>
-                                                <?php foreach ($caixa as $data) {  ?>
+                                              
                                                     <option value="cliente">Cliente</option>
                                                     <option value="fornecedor">Fornecedor</option>
-                                                <?php } ?>
+                                              
                                             </select>
                                             </select>
                                         </div>

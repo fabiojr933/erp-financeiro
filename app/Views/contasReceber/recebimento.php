@@ -57,9 +57,11 @@
                                                 <td><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></td>
                                                 <td><?php echo date('d/m/Y', strtotime($data['vencimento'])); ?></td>
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
-                                                <td><?php echo $data['status'] ?></td>
                                                 <td>
-                                                    <button type="button" onclick="setcontasReceberValues('<?php echo $data['id_contasReceber']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-xs"><i class="fas fa-dollar-sign"></i></button>
+                                                    <?php echo (isset($data['vencimento']) && $data['vencimento'] > date('Y-m-d')) ? '<span class="badge bg-danger">Vencido</span>' : '<span class="badge bg-success">A vencer</span>'; ?>
+                                                </td>
+                                                <td>
+                                                    <a type="button" onclick="setcontasReceberValues('<?php echo $data['id_contasReceber']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class=""><span class="badge bg-success">PAGAR</span></a>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>
@@ -95,11 +97,11 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>É uma Despesa ou uma Receita?</label>
-                            <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">                            
+                            <select class="form-control select2bs4" name="ip_tipo" id="ip_tipo" style="width: 100%;" onchange="alteraTipo()">
                                 <option selected value="receita">Receita</option>
                             </select>
                         </div>
-                    </div>                   
+                    </div>
                     <div class="col-md-12" id="id_receita">
                         <div class="form-group">
                             <label>Escolha a Receita</label>
