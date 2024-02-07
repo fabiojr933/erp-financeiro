@@ -97,13 +97,7 @@
                 <i class="nav-icon fas fa-plus"></i>
                 <p>Lançamento manual</p>
               </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-plus"></i>
-                <p>Lançamento por OFX</p>
-              </a>
-            </li>
+            </li>          
             <li class="nav-item">
               <a href="/contasReceber" class="nav-link">
                 <i class="nav-icon fas fa-plus"></i>
@@ -127,13 +121,7 @@
                 <i class="nav-icon fas fa-plus"></i>
                 <p>Baixa contas pagar</p>
               </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-plus"></i>
-                <p>Extrato bancario</p>
-              </a>
-            </li>
+            </li>            
           </ul>
         </li>
 

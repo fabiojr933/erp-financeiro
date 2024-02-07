@@ -27,6 +27,9 @@ class ContasPagar extends Migration
                 'type'              => 'DATE',
                 'default'           => date('Y-m-d'),
             ],
+            'data_pagamento'        => [
+                'type'              => 'DATE',               
+            ],
             'valor'                 => [
                 'type'              => 'DECIMAL',
                 'constraint'        => '10,2',

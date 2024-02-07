@@ -13,6 +13,7 @@ class contasReceber extends Model
         'status',
         'descricao',
         'vencimento',
+        'data_pagamento',
         'valor',
         'valor_pendente',
         'id_cliente',

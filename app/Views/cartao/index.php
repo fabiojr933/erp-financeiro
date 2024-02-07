@@ -46,9 +46,6 @@
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Cartões</a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Pagar documento do cartão credito</a>
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="card-body">
@@ -60,12 +57,7 @@
                                                             <tr>
                                                                 <th style="width: 35px">#</th>
                                                                 <th>Nome</th>
-                                                                <th>Agencia</th>
-                                                                <th>Conta</th>
-                                                                <th>Vencimento</th>
                                                                 <th>Tipo</th>
-                                                                <th>Saldo</th>
-                                                                <th>limite</th>
                                                                 <th class="no-print" style="width: 130px">Ações</th>
                                                             </tr>
                                                         </thead>
@@ -75,16 +67,7 @@
                                                                     <tr>
                                                                         <td><?php echo $data['id_cartao'] ?></td>
                                                                         <td><?php echo $data['nome'] ?></td>
-                                                                        <td><?php echo $data['agencia'] ?></td>
-                                                                        <td><?php echo $data['conta'] ?></td>
-                                                                        <td>Dia <?php echo $data['vencimento'] ?></td>
                                                                         <td><?php echo $data['tipo'] ?></td>
-                                                                        <?php if ($data['saldo']) : ?>
-                                                                            <td><?php echo $data['saldo'] ?></td>
-                                                                        <?php endif; ?>
-                                                                        <?php if ($data['limite']) : ?>
-                                                                            <td><?php echo $data['limite'] ?></td>
-                                                                        <?php endif; ?>
                                                                         <td>
                                                                             <a href="/cartao/visualizar/<?php echo $data['id_cartao'] ?>" class="btn btn-primary btn-xs"><i class="fas fa-search"></i></a>
                                                                             <a href="/cartao/editar/<?php echo $data['id_cartao'] ?>" class="btn btn-warning btn-xs"><i class="fas fa-edit"></i></a>
@@ -95,40 +78,6 @@
                                                             <?php else : ?>
                                                                 <tr>
                                                                     <td colspan="3">Nenhum cartão cadastrada</td>
-                                                                </tr>
-                                                            <?php endif; ?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
-                                                <div class="card-body table-responsive p-0">
-                                                    <table id="tabelaDados2" class="table table-hover text-nowrap table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width: 35px">#</th>
-                                                                <th>Nome</th>
-                                                                <th>data</th>
-                                                                <th>valor</th>
-                                                                <th class="no-print" style="width: 130px">Ações</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php if (!empty($credito)) : ?>
-                                                                <?php foreach ($credito as $data) : ?>
-                                                                    <tr>
-                                                                        <td><?php echo $data['id_credito'] ?></td>
-                                                                        <td><?php echo $data['nome'] ?></td>
-                                                                        <td><?php echo date('d/m/Y', strtotime($data['data'])); ?></td>
-                                                                        <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
-                                                                        <td>
-                                                                            <button type="button" onclick="document.getElementById('id_credito').value = '<?php echo  $data['id_credito'] ?>'" data-toggle="modal" data-target="#modal-default2" class="btn btn-danger btn-xs"><i class="fas fa-dollar-sign"></i></button>
-                                                                        </td>
-                                                                    </tr>
-                                                                <?php endforeach ?>
-                                                            <?php else : ?>
-                                                                <tr>
-                                                                    <td colspan="5">Nenhumadocumento encontrado</td>
                                                                 </tr>
                                                             <?php endif; ?>
                                                         </tbody>
@@ -171,58 +120,6 @@
     </div>
 </div>
 
-
-
-<div class="modal fade" id="modal-default2">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/cartao/pagamentoCredito" method="post">
-                <div class="modal-header">
-                    <h4 class="modal-title">Deseja realmente fazer o pagamento ?</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="id_credito" name="id_credito" value="" />
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Tipo pagamento</label>
-                        <select class="form-control select2bs4" name="id_pagamento" id="id_pagamento" style="width: 100%;" onchange="alteraTipo4()">
-                            <option selected value="1">Dinheiro</option>
-                            <option value="2">Cartão debito</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12" id="id_caixa">
-                    <div class="form-group">
-                        <label>Seleciona</label>
-                        <select class="form-control select2bs4" name="id_caixa" id="id_caixa" style="width: 100%;">
-                            <?php foreach ($caixa as $cai) {  ?>
-                                <option value="<?php echo $cai['id_caixa'] ?>"><?php echo $cai['nome'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12" id="id_cartao2">
-                    <div class="form-group">
-                        <label>Seleciona</label>
-                        <select class="form-control select2bs4" name="id_cartao2" id="id_cartao2" style="width: 100%;">
-                            <?php foreach ($cartaoCredito as $car) {  ?>
-                                <option value="<?php echo $car['id_cartao'] ?>"><?php echo $car['nome'] ?> - <?php echo $car['tipo'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                    <button type="submit" class="btn btn-primary">Sim</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <script>
     function alteraTipo4() {

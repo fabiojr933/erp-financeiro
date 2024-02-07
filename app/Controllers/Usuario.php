@@ -2,21 +2,32 @@
 
 namespace App\Controllers;
 
+use App\Models\Caixa;
+use App\Models\CartaoModel;
+use App\Models\Cliente;
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use App\Models\contaDre;
-use App\Models\contaFluxo;
+use App\Models\Fornecedor;
 use CodeIgniter\Controller;
 
 class Usuario extends Controller
 {
     private $session;
     private $usuario_model;
+    private $dbCaixa;
+    private $dbCartao;
+    private $dbCliente;
+    private $dbFornecedor;
 
     function __construct()
     {
         $this->session = session();
         $this->usuario_model = new UsuarioModel();
+        $this->dbCaixa = new Caixa();
+        $this->dbCartao = new CartaoModel();
+        $this->dbCliente = new Cliente();
+        $this->dbFornecedor = new Fornecedor();
     }
 
     public function index()
@@ -100,7 +111,10 @@ class Usuario extends Controller
                 $contaDre = new contaDre();
                 $receita->inserirReceita($id);
                 $contaDre->inserirContaDre($id);
-
+                $this->dbCaixa->inserirCaixa($id);
+                $this->dbCartao->inserirCartao($id);
+                $this->dbCliente->inserirCliente($id);
+                $this->dbFornecedor->inserirFornecedor($id);
                 $this->session->setFlashdata(
                     'alert',
                     [
@@ -203,7 +217,7 @@ class Usuario extends Controller
                 'bairro'             => $request->getPost('bairro'),
                 'fone'               => $request->getPost('fone'),
                 'numero'             => $request->getPost('numero'),
-                'dia_pagamento'      => $request->getPost('dia_pagamento'),               
+                'dia_pagamento'      => $request->getPost('dia_pagamento'),
             );
         } else {
             $dados = array(

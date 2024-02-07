@@ -61,7 +61,7 @@
                                         </thead>
                                         <tbody>
                                             <tr style="background: lightgrey">
-                                                <td><b> FATURAMENTO</b></td>
+                                                <td><b> FATURAMENTO</b></td>                                              
                                                 <td><b>TOTAL</b></td>
                                                 <td><b></b></td>
                                             </tr>
@@ -73,7 +73,9 @@
                                                         <?php if ($dataValor['nome'] == $dataReceita['nome']) : ?>
                                                             <?php $totalReceita += $dataValor['total'] ?>
                                                             <td style="color: blue;">R$: <?php echo number_format($dataValor['total'], 2, ',', '.'); ?> </td>
+                                                       
                                                         <?php endif; ?>
+
                                                     <?php } ?>
                                                     <td></td>
                                                 </tr>
@@ -98,7 +100,9 @@
                                                         <?php if ($dataDespesa['nome'] == $dataContaDre['nome']) : ?>
                                                             <?php $totalDespesa += $dataDespesa['total'] ?>
                                                             <td style="color: red;">R$: <?php echo number_format($dataDespesa['total'], 2, ',', '.'); ?> </td>
+                                                       
                                                         <?php endif; ?>
+
                                                     <?php } ?>
                                                     <td></td>
                                                 </tr>

@@ -8,6 +8,7 @@ use App\Models\CartaoModel;
 use App\Models\Cliente;
 use App\Models\contaFluxo;
 use App\Models\contasReceber as ModelsContasReceber;
+use App\Models\lancReceitaModel;
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
@@ -20,9 +21,10 @@ class contasReceber extends Controller
     private $dbUsuario;
     private $dbCartao;
     private $dbCaixa;
-    private $dbBaixaReceber;
     private $dbFluxo;
     private $dbReceita;
+    private $dbBaixaReceber;
+    private $dbLancReceita;
 
     function __construct()
     {
@@ -32,9 +34,10 @@ class contasReceber extends Controller
         $this->dbUsuario = new UsuarioModel();
         $this->dbCartao = new CartaoModel();
         $this->dbCaixa = new Caixa();
-        $this->dbBaixaReceber = new baixaContasReceber();
         $this->dbFluxo = new contaFluxo();
         $this->dbReceita = new ReceitaModel();
+        $this->dbBaixaReceber = new baixaContasReceber();
+        $this->dbLancReceita = new lancReceitaModel();
     }
 
     public function index()
@@ -189,23 +192,10 @@ class contasReceber extends Controller
             $id_caixa = null;
         }
 
-
-        // verifica se for dinheiro // verifica se ha saldo
-        if ($id_caixa) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($valor);
-            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
-        }
-        // verifica se for cartao // verifica se ha saldo
-        if ($id_cartao) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($valor);
-            $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-        }
-
         $dadosUpdate = [
             'status'         => 'Baixado',
-            'valor_pendente' => 0.00
+            'valor_pendente' => 0.00,
+            'data_pagamento' => $data
         ];
         $this->db->where(['id_contasReceber' => $id_contasReceber, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
 
@@ -222,7 +212,15 @@ class contasReceber extends Controller
         ];
 
         //alimentando a tabela de baixa 
-        $this->dbBaixaReceber->insert($dadosInsert);
+        $id_rec =  $this->dbBaixaReceber->insert($dadosInsert);
+
+        $receitaLan = [
+            'id_receita' => $request->getPost('id_receita'),
+            'id_contasReceber' => $id_contasReceber,
+            'valor' => $valor,
+            'id_usuario'  => $id_usuario
+        ];
+        $this->dbLancReceita->insert($receitaLan);
 
         $this->session->setFlashdata(
             'alert',
@@ -243,29 +241,15 @@ class contasReceber extends Controller
         $id_contasreceber = $request->getPost('id_contasreceber2');
         $id_usuario   = $this->session->get('id_usuario');
 
-        $dadosCancelamento = $this->dbBaixaReceber->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->first();
-
-
-
-        if ($dadosCancelamento['id_caixa']) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $dadosCancelamento['id_caixa'], 'id_usuario' => $id_usuario])->first();
-            $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($dadosCancelamento['valor']);
-
-            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $dadosCancelamento['id_caixa']])->set('saldo', $dataSaldo)->update();
-        }
-        if ($dadosCancelamento['id_cartao']) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->first();
-            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($dadosCancelamento['valor']);
-            $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-        }
+        $dadosCancelamento = $this->db->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->first();
 
         $dadosUpdate = [
             'status'         => 'Aberta',
             'valor_pendente' => $dadosCancelamento['valor']
         ];
-        $this->db->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
         $this->dbBaixaReceber->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->delete();
-
+        $this->db->where(['id_contasReceber' => $id_contasreceber, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+        $this->dbLancReceita->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_contasreceber])->delete();
         $this->session->setFlashdata(
             'alert',
             [

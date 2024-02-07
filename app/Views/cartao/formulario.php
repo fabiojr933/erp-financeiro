@@ -34,52 +34,20 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Tipo</label>
-                                            <select class="form-control select2" id="tipo" name="tipo" style="width: 100%;" onchange="alteraTipo()">
+                                            <select class="form-control select2" id="tipo" name="tipo" style="width: 100%;" >
                                                 <option value="debito" <?php echo $cartao['tipo'] == 'debito' ? 'selected' : '' ?>>Debito</option>
                                                 <option value="credito" <?php echo $cartao['tipo'] == 'credito' ? 'selected' : '' ?>>Credito</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group" id="saldo">
-                                            <label for="">Saldo</label>
-                                            <input type="text" class="form-control" name="saldo" value="<?php echo $cartao['saldo'] ?>" onkeypress="return allowOnlyNumbers(event)" >
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group" id="limite">
-                                            <label for="">Limite</label>
-                                            <input type="text" class="form-control" name="limite" value="<?php echo $cartao['limite'] ?>" onkeypress="return allowOnlyNumbers(event)" >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-3">
+                                    </div>   
+                                    <div class="col-lg-8">
                                         <div class="form-group">
                                             <label for="">Nome do cartão</label>
                                             <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $cartao['nome'] ?>" required="">
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Agencia</label>
-                                            <input type="number" class="form-control" name="agencia" value="<?php echo $cartao['agencia'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Nº da conta</label>
-                                            <input type="number" class="form-control" name="conta" value="<?php echo $cartao['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Vencimento</label>
-                                            <input type="number" class="form-control" name="vencimento" value="<?php echo $cartao['vencimento'] ?>">
-                                        </div>
-                                    </div>
+                                    </div>                                
                                 </div>
-
+                               
                                 <?php if ($cartao == null) : ?>
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input" type="checkbox" id="customCheckbox2" name="ativo" checked>
@@ -104,43 +72,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function alteraTipo() {
-        tipo = document.getElementById('tipo').value;
-
-        if (tipo == 'debito') {
-            document.getElementById('limite').hidden = true;
-            document.getElementById('saldo').hidden = false;
-        } else {
-            document.getElementById('limite').hidden = false;
-            document.getElementById('saldo').hidden = true;
-        }
-    }
-
-    // Chama as funções para trabalhar nos campos
-    alteraTipo();
-</script>
-
-
-<script>
-    function allowOnlyNumbers(event) {
-        // Obtem o código da tecla pressionada
-        var keyCode = event.which || event.keyCode;
-
-        // Permite apenas números (0-9) e algumas teclas especiais
-        if ((keyCode >= 48 && keyCode <= 57) ||    // Números
-            (keyCode >= 96 && keyCode <= 105) ||   // Números no teclado numérico
-            keyCode == 8 ||  // Backspace
-            keyCode == 9 ||  // Tab
-            keyCode == 37 || // Seta para a esquerda
-            keyCode == 39 || // Seta para a direita
-            keyCode == 46) { // Delete
-            return true;
-        } else {
-            // Impede a entrada de outras teclas
-            event.preventDefault();
-            return false;
-        }
-    }
-</script>

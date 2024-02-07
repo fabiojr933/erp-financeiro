@@ -42,6 +42,16 @@
 <script src="<?php echo base_url('theme/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') ?>"></script>
 
 <script src="<?php echo base_url('theme/plugins/pace-progress/pace.min.js') ?>"></script>
+
+
+
+
+
+<script src="<?php echo base_url('theme/plugins/chart.js/Chart.min.js') ?>"></script>
+
+
+
+<script src="<?php echo base_url('theme/dist/js/pages/dashboard3.js') ?>"></script>
 </body>
 
 </html>

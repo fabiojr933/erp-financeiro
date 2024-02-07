@@ -36,4 +36,23 @@ class Cliente extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
+
+    public function inserirCliente($id)
+    {
+        $data = [
+            'tipo' => 'fisica',
+            'nome'         => 'Cliente padrão',
+            'cpf'          =>  '88888888888',
+            'isento'       =>  'S',
+            'cep'          =>  '7852000',
+            'logradouro'   =>  'Sem endereço',
+            'numero'       =>  '99',
+            'complemento'  =>  'sem',
+            'bairro'       =>  'centro',
+            'estado'       =>  'MT',
+            'cidade'       =>  'gta',
+            'id_usuario'   => $id,
+        ];
+        $this->insert($data);
+    }
 }

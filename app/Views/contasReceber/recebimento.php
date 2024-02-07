@@ -58,10 +58,10 @@
                                                 <td><?php echo date('d/m/Y', strtotime($data['vencimento'])); ?></td>
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
                                                 <td>
-                                                    <?php echo (isset($data['vencimento']) && $data['vencimento'] > date('Y-m-d')) ? '<span class="badge bg-danger">Vencido</span>' : '<span class="badge bg-success">A vencer</span>'; ?>
+                                                    <?php echo (isset($data['vencimento']) && $data['vencimento'] > date('Y-m-d')) ? '<span class="badge bg-success">A vencer</span>' : '<span class="badge bg-danger">Vencido</span>'; ?>
                                                 </td>
                                                 <td>
-                                                    <a type="button" onclick="setcontasReceberValues('<?php echo $data['id_contasReceber']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class=""><span class="badge bg-success">PAGAR</span></a>
+                                                    <a type="button" onclick="setcontasReceberValues('<?php echo $data['id_contasReceber']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class=""><span class="badge bg-primary">RECEBER</span></a>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

@@ -13,6 +13,7 @@ class contasPagar extends Model
         'status',
         'descricao',
         'vencimento',
+        'data_pagamento',
         'valor',
         'valor_pendente',
         'id_fornecedor',

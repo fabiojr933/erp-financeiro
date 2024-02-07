@@ -57,9 +57,9 @@
                                                 <td><?php echo $data['nome'] == null ? $data['razao_social'] : $data['nome'] ?></td>
                                                 <td><?php echo date('d/m/Y', strtotime($data['vencimento'])); ?></td>
                                                 <td>R$: <?php echo number_format($data['valor'], 2, ',', '.'); ?></td>
-                                                <td>  <?php echo (isset($data['vencimento']) && $data['vencimento'] > date('Y-m-d')) ? '<span class="badge bg-danger">Vencido</span>' : '<span class="badge bg-success">A vencer</span>'; ?></td>
+                                                <td>  <?php echo (isset($data['vencimento']) && $data['vencimento'] > date('Y-m-d')) ? '<span class="badge bg-success">A vencer</span>' : '<span class="badge bg-danger">Vencido</span>'; ?></td>
                                                 <td>
-                                                    <a type="button" onclick="setContasPagarValues('<?php echo $data['id_contasPagar']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class=""><span class="badge bg-success">PAGAR</span></button>
+                                                    <a type="button" onclick="setContasPagarValues('<?php echo $data['id_contasPagar']; ?>', '<?php echo $data['valor']; ?>')" data-toggle="modal" data-target="#modal-default" class=""><span class="badge bg-primary">PAGAR</span></button>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

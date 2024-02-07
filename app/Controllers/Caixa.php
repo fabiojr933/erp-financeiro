@@ -55,8 +55,7 @@ class Caixa extends Controller
         // $saldo = str_replace(',', '.', preg_replace('/[^\d,]/', '', $saldo));       
 
         $dados = [
-            'nome'       => $request->getPost('nome'),
-            'saldo'      => floatval($saldo),
+            'nome'       => $request->getPost('nome'),           
             'id_usuario' => $this->session->get('id_usuario'),
         ];
 

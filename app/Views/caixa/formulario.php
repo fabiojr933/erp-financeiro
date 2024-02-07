@@ -31,18 +31,12 @@
                                     <input type="hidden" class="form-control" id="id_caixa" name="id_caixa" value="<?php echo (isset($caixa)) ? $caixa['id_caixa'] : '' ?>">
                                 <?php endif; ?>
                                 <div class="row">
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="">Nome da caixa</label>
                                             <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $caixa['nome'] ?>" required="">
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group" id="saldo">
-                                            <label for="">Saldo</label>
-                                            <input type="text" class="form-control" name="saldo" value="<?php echo $caixa['saldo'] ?>" onkeypress="return allowOnlyNumbers(event)" required>
-                                        </div>
-                                    </div>
+                                    </div>                                   
                                 </div>
                             </div>
                             <div class="card-footer">

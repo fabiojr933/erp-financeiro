@@ -9,6 +9,8 @@ use App\Models\contaFluxo;
 use App\Models\Fornecedor;
 use App\Models\lancamento as ModelsLancamento;
 use App\Models\lancamentoCredito;
+use App\Models\lancDespesaModel;
+use App\Models\lancReceitaModel;
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
@@ -25,7 +27,8 @@ class Lancamento extends Controller
     private $dbCliente;
     private $dbReceita;
     private $dbDespesa;
-    private $dbLancCredito;
+    private $dbLancReceita;
+    private $dbLancDespesa;
 
     function __construct()
     {
@@ -38,7 +41,8 @@ class Lancamento extends Controller
         $this->dbCliente = new Cliente();
         $this->dbReceita = new ReceitaModel();
         $this->dbDespesa = new contaFluxo();
-        $this->dbLancCredito = new lancamentoCredito();
+        $this->dbLancDespesa = new lancDespesaModel();
+        $this->dbLancReceita = new lancReceitaModel();
     }
 
     public function index()
@@ -127,6 +131,29 @@ class Lancamento extends Controller
             'id_usuario'    => $id_usuario,
         ];
 
+
+
+
+        $id = $this->dbLancamento->insert($data);
+
+        if ($tipo == 'despesa') {
+            $despesaLan = [
+                'id_contaFluxo' => $id_fluxo,
+                'id_lancamento' => $id,
+                'valor' => $valor,
+                'id_usuario'  => $id_usuario
+            ];
+            $this->dbLancDespesa->insert($despesaLan);
+        } else {
+            $receitaLan = [
+                'id_receita' => $id_receita,
+                'id_lancamento' => $id,
+                'valor' => $valor,
+                'id_usuario'  => $id_usuario
+            ];
+            $this->dbLancReceita->insert($receitaLan);
+        }
+
         $this->session->setFlashdata(
             'alert',
             [
@@ -135,99 +162,20 @@ class Lancamento extends Controller
                 'titulo' => 'Lançamento feito com sucesso com sucesso!'
             ]
         );
-
-
-        if ($id_caixa) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $id_usuario])->first();
-
-            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
-                $this->session->setFlashdata(
-                    'alert',
-                    [
-                        'tipo'  => 'sucesso',
-                        'cor'   => 'danger',
-                        'titulo' => 'Não foi possivel fazer esse lançamento, SALDO insuficiente no caixa!'
-                    ]
-                );
-                return redirect()->to('lancamento');
-            } else {
-                $id = $this->dbLancamento->insert($data);
-                $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($valor);
-                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
-            }
-        }
-        if ($id_cartao) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->first();
-            if ($cartaoSaldo['tipo'] == 'credito') {
-                if (floatval($valor) > floatval($cartaoSaldo['limite'])) {
-                    $this->session->setFlashdata(
-                        'alert',
-                        [
-                            'tipo'  => 'sucesso',
-                            'cor'   => 'danger',
-                            'titulo' => 'Não foi possivel fazer esse lançamento, LIMITE insuficiente no cartão!'
-                        ]
-                    );
-                    return redirect()->to('lancamento');
-                } else {
-                    $dataCartaoSaldo = floatval($cartaoSaldo['limite']) - floatval($valor);
-                    $id = $this->dbLancamento->insert($data);
-                    $credito = [
-                        'id_lancamento'         => $id,
-                        'id_cartao'             => $id_cartao,
-                        'valor'                 => $valor,
-                        'id_usuario'            => $id_usuario,
-                        'status'                => 'Pendente'
-                    ];
-                    $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-                    $this->dbLancCredito->insert($credito);
-                }
-            } else {
-                if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
-                    $this->session->setFlashdata(
-                        'alert',
-                        [
-                            'tipo'  => 'sucesso',
-                            'cor'   => 'danger',
-                            'titulo' => 'Não foi possivel fazer esse lançamento, SALDO insuficiente no cartão!'
-                        ]
-                    );
-                    return redirect()->to('lancamento');
-                } else {
-                    $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($valor);
-                    $id = $this->dbLancamento->insert($data);
-                    $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-                }
-            }
-        }
-
         return redirect()->to('lancamento');
     }
+
+
     public function excluir()
     {
         $request = request();
         $id_lancamento = $request->getPost('id_lancamento');
-        $lancamento = $this->dbLancamento->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->first();
-
-        if ($lancamento['id_cartao']) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $lancamento['id_cartao'], 'id_usuario' => $this->session->get('id_usuario')])->first();
-            if ($cartaoSaldo['tipo'] == 'debito') {
-                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($lancamento['valor']);
-                $this->dbCartao->where(['id_cartao' => $lancamento['id_cartao'], 'id_usuario' => $this->session->get('id_usuario')])->set('saldo', $dataCartaoSaldo)->update();
-            } else {
-                $dataCartaoSaldo = floatval($cartaoSaldo['limite']) + floatval($lancamento['valor']);
-                $this->dbCartao->where(['id_cartao' => $lancamento['id_cartao'], 'id_usuario' => $this->session->get('id_usuario')])->set('limite', $dataCartaoSaldo)->update();
-            }
-            $this->dbLancCredito->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->delete();
+        $tipo = $this->dbLancamento->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->first();
+        if ($tipo['tipo'] == 'despesa') {
+            $this->dbLancDespesa->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->delete();
+        } else {
+            $this->dbLancReceita->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->delete();
         }
-
-        if ($lancamento['id_caixa']) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $lancamento['id_caixa'], 'id_usuario' => $this->session->get('id_usuario')])->first();
-            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($lancamento['valor']);
-
-            $this->dbCaixa->where(['id_usuario' => $this->session->get('id_usuario'), 'id_caixa' => $lancamento['id_caixa']])->set('saldo', $dataSaldo)->update();
-        }
-
         $this->dbLancamento->where(['id_usuario' => $this->session->get('id_usuario'), 'id_lancamento' => $id_lancamento])->delete();
         $this->session->setFlashdata(
             'alert',

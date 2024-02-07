@@ -10,14 +10,9 @@ class CartaoModel extends Model
     protected $primaryKey = 'id_cartao';
     protected $allowedFields = [
         'id_cartao',
-        'nome',
-        'agencia',
-        'conta',
-        'vencimento',
+        'nome',       
         'ativo',
-        'tipo',
-        'saldo',
-        'limite',
+        'tipo',        
         'id_usuario',
     ];
 
@@ -25,4 +20,15 @@ class CartaoModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
+
+    public function inserirCartao($id)
+    {
+        $data = [
+            'nome' => 'Cartao Padrão',
+            'ativo'      => 'S',
+            'tipo'      => 'Debito',
+            'id_usuario' => $id,
+        ];
+        $this->insert($data);
+    }
 }

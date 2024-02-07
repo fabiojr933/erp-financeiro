@@ -8,6 +8,7 @@ use App\Models\CartaoModel;
 use App\Models\contaFluxo;
 use App\Models\fornecedor;
 use App\Models\contasPagar as ModelscontasPagar;
+use App\Models\lancDespesaModel;
 use App\Models\ReceitaModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
@@ -20,9 +21,10 @@ class contasPagar extends Controller
     private $dbUsuario;
     private $dbFluxo;
     private $dbReceita;
-    private $dbBaixaPagar;
     private $dbCartao;
     private $dbCaixa;
+    private $dbBaixaPagar;
+    private $dbLancDespesa;
 
     function __construct()
     {
@@ -32,9 +34,10 @@ class contasPagar extends Controller
         $this->dbUsuario = new UsuarioModel();
         $this->dbFluxo = new contaFluxo();
         $this->dbReceita = new ReceitaModel();
-        $this->dbBaixaPagar = new baixaContasPagar();
         $this->dbCartao = new CartaoModel();
         $this->dbCaixa = new Caixa();
+        $this->dbBaixaPagar = new baixaContasPagar();
+        $this->dbLancDespesa = new lancDespesaModel();
     }
 
     public function index()
@@ -107,7 +110,6 @@ class contasPagar extends Controller
                 'titulo' => 'Contas a pagar cadastrada com sucesso!'
             ]
         );
-        // var_dump($dados); exit;
         $this->db->insert($dados);
         return redirect()->to('contasPagar');
     }
@@ -193,51 +195,14 @@ class contasPagar extends Controller
             $id_caixa = null;
         }
 
-        // verifica se for dinheiro // verifica se ha saldo
-        if ($id_caixa) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $id_caixa, 'id_usuario' => $this->session->get('id_usuario')])->first();
-
-            if (floatval($valor) > floatval($caixaSaldo['saldo'])) {
-                $this->session->setFlashdata(
-                    'alert',
-                    [
-                        'tipo'  => 'sucesso',
-                        'cor'   => 'danger',
-                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no caixa!'
-                    ]
-                );
-                return redirect()->to('contasPagar/recebimento');
-            } else {
-                $dataSaldo = floatval($caixaSaldo['saldo']) - floatval($valor);
-                $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $id_caixa])->set('saldo', $dataSaldo)->update();
-            }
-        }
-
-        // verifica se for cartao // verifica se ha saldo
-        if ($id_cartao) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $this->session->get('id_usuario')])->first();
-            if (floatval($valor) > floatval($cartaoSaldo['saldo'])) {
-                $this->session->setFlashdata(
-                    'alert',
-                    [
-                        'tipo'  => 'sucesso',
-                        'cor'   => 'danger',
-                        'titulo' => 'Não foi possivel fazer o pagamento, SALDO insuficiente no cartão!'
-                    ]
-                );
-                return redirect()->to('contasPagar/recebimento');
-            } else {
-                $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) - floatval($valor);
-                $this->dbCartao->where(['id_cartao' => $id_cartao, 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-            }
-        }
 
         $dadosUpdate = [
             'status'         => 'Baixado',
-            'valor_pendente' => 0.00
+            'valor_pendente' => 0.00,
+            'data_pagamento' => $data
         ];
-        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
 
+        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
         $dadosInsert = [
             'origem'         =>  'Contas a Pagar',
             'id_pagamento'   => $id_pagamento,
@@ -249,10 +214,15 @@ class contasPagar extends Controller
             'id_caixa'       => $id_caixa,
             'id_cartao'      => $id_cartao
         ];
+        $id_pagar = $this->dbBaixaPagar->insert($dadosInsert);
 
-        //alimentando a tabela de baixa     
-
-        $this->dbBaixaPagar->insert($dadosInsert);
+        $despesaLan = [
+            'id_contaFluxo' => $request->getPost('id_fluxo'),
+            'id_contasPagar' => $id_pagar,
+            'valor' => $valor,
+            'id_usuario'  => $id_usuario
+        ];
+        $this->dbLancDespesa->insert($despesaLan);
 
         $this->session->setFlashdata(
             'alert',
@@ -267,37 +237,18 @@ class contasPagar extends Controller
 
     public function cancelamento()
     {
-
-       
         $request = request();
-
         $id_contasPagar = $request->getPost('id_contasPagar2');
         $id_usuario   = $this->session->get('id_usuario');
-     
-        $dadosCancelamento = $this->dbBaixaPagar->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->first();
-
-    
-
-
-        if ($dadosCancelamento['id_caixa']) {
-            $caixaSaldo = $this->dbCaixa->where(['id_caixa' => $dadosCancelamento['id_caixa'], 'id_usuario' => $id_usuario])->first();
-            $dataSaldo = floatval($caixaSaldo['saldo']) + floatval($dadosCancelamento['valor']);
-
-            $this->dbCaixa->where(['id_usuario' => $id_usuario, 'id_caixa' => $dadosCancelamento['id_caixa']])->set('saldo', $dataSaldo)->update();
-        }
-        if ($dadosCancelamento['id_cartao']) {
-            $cartaoSaldo = $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->first();
-            $dataCartaoSaldo = floatval($cartaoSaldo['saldo']) + floatval($dadosCancelamento['valor']);
-            $this->dbCartao->where(['id_cartao' => $dadosCancelamento['id_cartao'], 'id_usuario' => $id_usuario])->set('saldo', $dataCartaoSaldo)->update();
-        }
+        $dadosCancelamento = $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->first();
 
         $dadosUpdate = [
             'status'         => 'Aberta',
             'valor_pendente' => $dadosCancelamento['valor']
         ];
-        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
         $this->dbBaixaPagar->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->delete();
-
+        $this->db->where(['id_contasPagar' => $id_contasPagar, 'id_usuario' => $id_usuario])->set($dadosUpdate)->update();
+        $this->dbLancDespesa->where(['id_usuario' => $this->session->get('id_usuario'), 'id_contasPagar' => $id_contasPagar])->delete();
         $this->session->setFlashdata(
             'alert',
             [

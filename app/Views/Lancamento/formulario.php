@@ -28,7 +28,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Digite os campos abaixo</h3>
                         </div>
-                        <form action="<?php base_url() ?>/lancamento/store" method="POST">
+                        <form action="/lancamento/store" method="POST">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-3">

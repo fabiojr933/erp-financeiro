@@ -37,49 +37,15 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group" id="saldo">
-                                            <label for="">Saldo</label>
-                                            <input type="text" class="form-control" name="saldo" value="<?php echo $cartao['saldo'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group" id="limite">
-                                            <label for="">Limite</label>
-                                            <input type="text" class="form-control" name="limite" value="<?php echo $cartao['limite'] ?>">
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                
-
-                                <div class="row">
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-8">
                                         <div class="form-group">
                                             <label for="">Nome do cartão</label>
                                             <input type="text" class="form-control" id="nome" name="nome" disabled value="<?php echo $cartao['nome'] ?>" required="">
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Agencia</label>
-                                            <input type="number" class="form-control" name="agencia" disabled value="<?php echo $cartao['agencia'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Nº da conta</label>
-                                            <input type="number" class="form-control" name="conta" disabled value="<?php echo $cartao['conta'] ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="">Vencimento</label>
-                                            <input type="number" class="form-control" name="vencimento" disabled value="<?php echo $cartao['vencimento'] ?>">
-                                        </div>
-                                    </div>
-                                </div>
+
+                                </div>                                
+
                                     <?php if ($cartao) : ?>
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox" disabled id="customCheckbox2" name="ativo" <?php echo $cartao['ativo'] == 'S' ? 'checked' : '' ?>>
@@ -95,39 +61,3 @@
         </div>
     </div>
 </div>
-<script>
-    function alteraTipo() {
-        tipo = document.getElementById('tipo').value;
-
-        if (tipo == 'debito') {
-            document.getElementById('limite').hidden = true;
-            document.getElementById('saldo').hidden = false;
-        } else {
-            document.getElementById('limite').hidden = false;
-            document.getElementById('saldo').hidden = true;
-        }
-    }
-
-    // Chama as funções para trabalhar nos campos
-    alteraTipo();
-</script>
-
-<script>
-    $(document).ready(function() {
-        // Aplica a máscara ao campo de saldo
-        $('#saldo input[name="saldo"]').inputmask('currency', {
-            radixPoint: ',',
-            groupSeparator: '.',
-            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
-            prefix: 'R$ ',
-            autoUnmask: true
-        });
-        $('#limite input[name="limite"]').inputmask('currency', {
-            radixPoint: ',',
-            groupSeparator: '.',
-            allowMinus: false, // Descomente esta linha se quiser permitir números negativos
-            prefix: 'R$ ',
-            autoUnmask: true
-        });
-    });
-</script>

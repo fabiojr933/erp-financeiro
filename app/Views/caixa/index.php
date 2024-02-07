@@ -44,8 +44,7 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 35px">#</th>
-                                        <th>Nome</th>                                        
-                                        <th>Saldo</th>
+                                        <th>Nome</th> 
                                         <th class="no-print" style="width: 130px">Ações</th>
                                     </tr>
                                 </thead>
@@ -56,7 +55,6 @@
                                                 <td><?php echo $data['id_caixa'] ?></td>
                                                 <td><?php echo $data['nome'] ?></td>                                               
                                                 <?php if ($data['saldo']) : ?>
-                                                    <td><?php echo $data['saldo'] ?></td>
                                                 <?php endif; ?>                                                    
                                                 <td>
                                                     <a href="/caixa/visualizar/<?php echo $data['id_caixa'] ?>" class="btn btn-primary btn-xs"><i class="fas fa-search"></i></a>

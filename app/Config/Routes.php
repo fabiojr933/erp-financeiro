@@ -11,6 +11,9 @@ $routes->get('/', 'Inicio::index');
 
 $routes->get('/inicio', 'Inicio::index');
 
+$routes->get('/backup', 'Backup::index');
+$routes->get('/backup/sistema', 'Backup::backup');
+
 $routes->get('/receita', 'Receita::index');
 $routes->get('/receita/novo', 'Receita::novo');
 $routes->get('/receita/editar/(:num)', 'Receita::editar/$1');

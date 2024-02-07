@@ -18,12 +18,7 @@ class Caixa extends Migration
             'nome'                  => [
                 'type'              => 'VARCHAR',
                 'constraint'        => 128
-            ],
-            'saldo'                 => [
-                'type'              => 'DECIMAL',
-                'constraint'        => '10,2',
-                'default'           => 0.00
-            ],            
+            ],           
             'id_usuario'            => [
                 'type'              => 'INT',
                 'constraint'        => 9,

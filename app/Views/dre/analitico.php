@@ -73,6 +73,7 @@
                                                         <?php if ($dataValor['nome'] == $dataReceita['nome']) : ?>
                                                             <?php $totalReceita += $dataValor['total'] ?>
                                                             <td style="color: blue;">R$: <?php echo number_format($dataValor['total'], 2, ',', '.'); ?> </td>
+                                                      
                                                         <?php endif; ?>
                                                     <?php } ?>
                                                     <td></td>
@@ -102,7 +103,9 @@
                                                         <?php if ($dataFluxo['nome'] == $dataFluxoValor['nome']) : ?>
                                                             <?php $totalDespesa += $dataFluxoValor['total'] ?>
                                                             <td style="color: red;">R$: <?php echo number_format($dataFluxoValor['total'], 2, ',', '.'); ?> </td>
+                                                       
                                                         <?php endif; ?>
+
                                                     <?php } ?>
                                                     <td></td>
                                                 </tr>

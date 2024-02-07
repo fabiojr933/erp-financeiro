@@ -19,4 +19,15 @@ class Caixa extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
+
+
+    public function inserirCaixa($id)
+    {
+        $data = [
+            'nome' => 'Carteira',
+            'ativo'      => 'S',
+            'id_usuario' => $id,
+        ];
+        $this->insert($data);
+    }
 }

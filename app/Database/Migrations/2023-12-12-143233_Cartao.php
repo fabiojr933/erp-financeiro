@@ -19,35 +19,12 @@ class Cartao extends Migration
                 'type'              => 'VARCHAR',
                 'constraint'        => 128
             ],
-            'agencia'                 => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 15
-            ],
-            'conta'                 => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 25
-            ],
-            'vencimento'                 => [
-                'type'              => 'VARCHAR',
-                'constraint'        => 15
-            ],
             'ativo'                 => [
                 'type'              => 'CHAR'
             ],
             'tipo'                  => [
                 'type'              => 'VARCHAR',
                 'constraint'        => 128
-            ],
-
-            'saldo'                 => [
-                'type'              => 'DECIMAL',
-                'constraint'        => '10,2',
-                'default'           => 0.00
-            ],
-            'limite'                => [
-                'type'              => 'DECIMAL',
-                'constraint'        => '10,2',
-                'default'           => 0.00
             ],
             'id_usuario'            => [
                 'type'              => 'INT',

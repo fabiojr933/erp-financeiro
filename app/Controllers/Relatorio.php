@@ -44,35 +44,22 @@ class Relatorio extends Controller
             'data_inicio' => $data_inicio,
             'data_final'  => $data_final,
         ];
-     
-        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
 
-        $sql = "WITH dados as (
-            select
-            rec.id_receita,
-            rec.nome,
-    		IFNULL(SUM(bxa.valor), '00.00') as total
-            from baixa_conta_receber bxa
-            RIGHT join receita rec on bxa.id_receita = rec.id_receita
-            -- where bxa.id_receita is NOT null
-            and bxa.data_pagamento BETWEEN '$data_inicio' and '$data_final'
-            group by 1,2
-            UNION
-            select 
-            rec.id_receita,
-            rec.nome,
-      		IFNULL(SUM(lan.valor), '00.00') as total          
-            from lancamento lan
-            RIGHT join receita rec on lan.id_receita = rec.id_receita
-           -- where lan.id_receita is NOT null
-            and lan.data_pagamento BETWEEN '$data_inicio' and '$data_final'
-            group by 1,2)
-            select 
-            dados.id_receita,
-            dados.nome,
-            CAST(sum(dados.total)AS DECIMAL(10,2)) as total
-            from dados
-            group by 1,2";
+        $id_usuario = $this->session->get('id_usuario');
+
+        $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
+       
+        $sql = "SELECT
+        rec.id_receita,
+        rec.nome,
+        COALESCE(SUM(lanc.valor), '00.00') as total
+    FROM
+        receita rec
+    LEFT JOIN lancreceita lanc ON lanc.id_receita = rec.id_receita
+        AND lanc.data_pagamento BETWEEN '$data_inicio' and '$data_final'
+        AND lanc.id_usuario = '$id_usuario'
+    GROUP BY
+        rec.id_receita, rec.nome;";
 
         $valoresReceita['valoresReceita'] =  $this->dbReceita->query($sql)->getResultArray();
 
@@ -104,35 +91,22 @@ class Relatorio extends Controller
             'data_inicio' => $data_inicio,
             'data_final'  => $data_final,
         ];
-     
+
+        $id_usuario = $this->session->get('id_usuario');
+
         $perfil['perfil'] = $this->dbUsuario->where('id_usuario', $this->session->get('id_usuario'))->first();
 
-        $sql = "WITH dados as (
-            select
-            f.id_contaFluxo,
-            f.nome,
-    		IFNULL(SUM(bxa.valor), '00.00') as total
-            from baixa_conta_pagar bxa
-            RIGHT join contafluxo f on bxa.id_despesa = f.id_contaFluxo          
-            -- where bxa.id_despesa is NOT null
-            and bxa.data_pagamento BETWEEN '$data_inicio' and '$data_final'
-            group by 1,2 
-            UNION
-            select 
-            f.id_contaFluxo,
-            f.nome,
-    		IFNULL(SUM(lan.valor), '00.00') as total
-            from lancamento lan
-            RIGHT join contafluxo f on lan.id_fluxo = f.id_contaFluxo          
-           -- where lan.id_fluxo is NOT null
-            and lan.data_pagamento BETWEEN '$data_inicio' and '$data_final'
-            group by 1,2)
-            select 
-            dados.id_contaFluxo,
-            dados.nome,
-            cast(sum(dados.total) as decimal(10,2)) as total
-            from dados
-            group by 1,2";
+        $sql = "SELECT
+        rec.id_contaFluxo,
+        rec.nome,
+        COALESCE(SUM(lanc.valor), '00.00') as total
+    FROM
+       contafluxo rec
+    LEFT JOIN lancdespesa lanc ON lanc.id_contaFluxo = rec.id_contaFluxo
+         AND lanc.data_pagamento BETWEEN '$data_inicio' and '$data_final'
+         AND lanc.id_usuario = '$id_usuario'
+    GROUP BY
+        rec.id_contaFluxo, rec.nome";
 
         $valoresDespesa['valoresDespesa'] =  $this->dbDespesa->query($sql)->getResultArray();
 
