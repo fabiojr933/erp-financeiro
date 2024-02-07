@@ -225,6 +225,24 @@
           </ul>
         </li>
 
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <p>
+              Backup
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="/backup" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Fazer Backup</p>
+              </a>
+            </li>          
+          </ul>
+        </li>
+
+
 
       </ul>
     </nav>
