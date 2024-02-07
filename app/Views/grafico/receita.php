@@ -106,7 +106,7 @@
 
 $dataReceita = [['Nome', 'Total']];
 foreach ($valoresReceita as $value) {
-    $dataReceita[] = [$value['nome'], floatval(number_format($value['total'], 2, ',', '.'))];
+    $dataReceita[] = [$value['nome'], floatval($value['total'])];
 }
 $dados_json = json_encode($dataReceita);
 ?>

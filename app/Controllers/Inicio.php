@@ -204,7 +204,7 @@ SELECT
 
         $graficoReceber['graficoReceber'] =  $this->dbLancamento->query($sql6)->getResultArray();
 
-
+ 
         $arrayDados = array_merge(
             $contasReceber,
             $contasPagar,

@@ -106,7 +106,7 @@
 
 $dataDespesa = [['Nome', 'Total']];
 foreach ($valoresDespesa as $value) {
-    $dataDespesa[] = [$value['nome'], floatval(number_format($value['total'], 2, ',', '.'))];
+    $dataDespesa[] = [$value['nome'], floatval($value['total'])];
 }
 $dados_json = json_encode($dataDespesa);
 ?>

@@ -260,7 +260,7 @@ $email = $session->get('usuario');
                         <td>
                           <?php echo $data['nome'] ?>
                         </td>
-                        <td> R$: <?php echo $data['valor'] ?></td>
+                        <td> R$: <?php echo $data['valor_pendente'] ?></td>
                         <td>
                           <small class="text-primary mr-1">
                             <i class="fas fa-arrow-up"></i>
@@ -280,7 +280,7 @@ $email = $session->get('usuario');
                         <td>
                           <?php echo $data['nome'] ?>
                         </td>
-                        <td> R$: <?php echo $data['valor'] ?></td>              
+                        <td> R$: <?php echo $data['valor_pendente'] ?></td>              
                         <td>
                           <small class="text-danger mr-1">
                           <i class="fas fa-arrow-down"></i>
@@ -311,7 +311,7 @@ $email = $session->get('usuario');
 
 $graficoPagarDespesa = [['Tipo', 'Valor']];
 foreach ($graficoPagar as $value) {
-    $graficoPagarDespesa[] = [$value['tipo'], floatval(number_format($value['valor'], 2, ',', '.'))];
+    $graficoPagarDespesa[] = [$value['tipo'], floatval($value['valor'])];
 }
 $dados_json = json_encode($graficoPagarDespesa);
 ?>
@@ -342,7 +342,7 @@ $dados_json = json_encode($graficoPagarDespesa);
 
 $graficoReceberDespesa = [['Tipo', 'Valor']];
 foreach ($graficoReceber as $value) {
-    $graficoReceberDespesa[] = [$value['tipo'], floatval(number_format($value['valor'], 2, ',', '.'))];
+    $graficoReceberDespesa[] = [$value['tipo'], floatval($value['valor'])];
 }
 $dados_json = json_encode($graficoReceberDespesa);
 ?>

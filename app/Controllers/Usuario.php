@@ -256,7 +256,8 @@ class Usuario extends Controller
 
     public function trocaSenha()
     {
-        echo View('templates/header');
+        $perfil['perfil'] = $this->usuario_model->where('id_usuario', $this->session->get('id_usuario'))->first();
+        echo View('templates/header', $perfil);
         echo View('login/trocaSenha');
         echo View('templates/footer');
     }
@@ -296,8 +297,9 @@ class Usuario extends Controller
     public function perfil()
     {
 
+        $perfil['perfil'] = $this->usuario_model->where('id_usuario', $this->session->get('id_usuario'))->first();
         $dados['usuario'] = $this->usuario_model->where('id_usuario', $this->session->get('id_usuario'))->first();
-        echo View('templates/header');
+        echo View('templates/header', $perfil);
         echo View('login/perfil', $dados);
         echo View('templates/footer');
     }
